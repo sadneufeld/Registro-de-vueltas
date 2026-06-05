@@ -89,7 +89,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v2.0</div>
+    <div class="version-tag">v1.1.1</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -98,14 +98,14 @@
 
     <div class="container">
         <div style="text-align: center;">
-            <h1>Sistema Operativo de Reparto</h1>
+            <h1>Reporte de Vueltas</h1>
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="openTab(event, 'Registro')">Registro de Vueltas</button>
-            <button class="tab" onclick="openTab(event, 'Incidencias')">Faltantes y Devoluciones</button>
+            <button class="tab active" onclick="openTab(event, 'Registro')">Registro de vueltas</button>
+            <button class="tab" onclick="openTab(event, 'Incidencias')">Registro de diferencias</button>
             <button class="tab" onclick="openTab(event, 'Estadisticas')">Estadísticas</button>
-            <button class="tab" onclick="openTab(event, 'Historial')">Historial de Vueltas</button>
+            <button class="tab" onclick="openTab(event, 'Historial')">Historial de vueltas</button>
         </div>
 
         <!-- PESTAÑA: REGISTRO DE VUELTAS -->
@@ -316,6 +316,16 @@
             </div>
         </div>
 
+        <div style="margin: 40px 0; border-top: 2px dashed #ddd;"></div>
+
+        <h2>Promedio de Llegada por Sucursal</h2>
+        <div class="table-responsive">
+            <table id="tabla-promedios-llegada">
+                <thead><tr><th>Sucursal</th><th>Promedio PT</th><th>Promedio PT PAX</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
         <!-- PESTAÑA: HISTORIAL -->
         <div id="Historial" class="tab-content">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -338,7 +348,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMvCfGmrOW5T0uO1M4DJSxUzoxS1JZEyXLvOc9ZJvF_Ka_G4IBtxBoFO066mFsqAcG/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPWfcNVrdoSgQ2BEOPaGzR4FjH2JXis71WgWhZBySQiwVvZfXBhSqRVuSzO9z5KkJt/exec"; 
         
         const sucursales = [
             { id: "ACA", name: "AVILA CAMACHO", supervisor: "ADRIANA" }, { id: "IND", name: "INDEPENDENCIA", supervisor: "ADRIANA" },
@@ -651,8 +661,23 @@
             const sucFiltradas = sup === "TODOS" ? sucursales : sucursales.filter(s => s.supervisor === sup);
             const regs = registros.filter(r => r.fecha && r.fecha.substring(0,7) === mes && !r.esSegundaVuelta);
 
+            // Generar Gráficas
             procesarGrafica(regs.filter(r => r.tipoProducto !== "PT PAX"), sucFiltradas, "graficaLlegadasPT", "PT", chartPT, (c) => chartPT = c);
             procesarGrafica(regs.filter(r => r.tipoProducto === "PT PAX"), sucFiltradas, "graficaLlegadasPAX", "PAX", chartPAX, (c) => chartPAX = c);
+
+            // Calcular y llenar tabla de promedios
+            const tbodyProm = document.querySelector("#tabla-promedios-llegada tbody");
+            tbodyProm.innerHTML = "";
+            
+            sucFiltradas.forEach(s => {
+                const regsPT = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT" && r.horaLlegada);
+                const regsPAX = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT PAX" && r.horaLlegada);
+
+                const promPT = regsPT.length > 0 ? minsToTime(regsPT.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / regsPT.length) : "-";
+                const promPAX = regsPAX.length > 0 ? minsToTime(regsPAX.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / regsPAX.length) : "-";
+
+                tbodyProm.innerHTML += `<tr><td><b>${s.id}</b></td><td>${promPT}</td><td>${promPAX}</td></tr>`;
+            });
         }
 
         function procesarGrafica(datos, sucursalesList, idCanvas, tipo, chartRef, updateChartRef) {
