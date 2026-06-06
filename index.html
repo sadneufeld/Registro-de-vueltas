@@ -201,20 +201,15 @@
         <!-- PESTAÑA: ESTADÍSTICAS -->
         <div id="Estadisticas" class="tab-content">
             
-            <!-- SECCIÓN 1: LLEGADAS REGISTRADAS -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h2 style="margin: 0;">Llegadas Registradas</h2>
-                <button class="btn-sort" onclick="toggleOrdenLlegadas()">Alternar Orden de Llegada ⇅</button>
-            </div>
-            
-            <div class="form-row" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
+            <!-- FILTRO GLOBAL DE ESTADÍSTICAS -->
+            <div class="form-row" style="background: #eef2f5; padding: 15px; border-radius: 8px; border: 2px solid var(--primary-light); margin-bottom: 25px;">
                 <div class="form-col" style="max-width: 300px;">
-                    <label>Filtrar por Fecha:</label>
-                    <input type="date" id="fecha-llegadas-est" onchange="renderLlegadasHoy()">
+                    <label style="color: var(--primary-dark);">Filtro Global - Mes:</label>
+                    <input type="month" id="filtro-mes-global" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
                 </div>
                 <div class="form-col" style="max-width: 300px;">
-                    <label>Filtrar por Supervisor:</label>
-                    <select id="sup-llegadas-est" onchange="renderLlegadasHoy()">
+                    <label style="color: var(--primary-dark);">Filtro Global - Supervisor:</label>
+                    <select id="filtro-sup-global" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
                         <option value="TODOS">Todos</option>
                         <option value="ADRIANA">Adriana</option>
                         <option value="CITLALLI">Citlalli</option>
@@ -225,34 +220,34 @@
                 </div>
             </div>
 
+            <!-- SECCIÓN 1: PROMEDIO DE LLEGADA POR SUCURSAL (MOVIDO ARRIBA) -->
+            <h2 style="margin-top: 0;">Promedio de Llegada por Sucursal</h2>
+            <div class="table-responsive" style="margin-bottom: 30px;">
+                <table id="tabla-promedios-llegada">
+                    <thead><tr><th>Sucursal</th><th>Promedio PT</th><th>Promedio PT PAX</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div style="margin: 40px 0; border-top: 2px dashed #ddd;"></div>
+            
+            <!-- SECCIÓN 2: LLEGADAS REGISTRADAS -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2 style="margin: 0;">Llegadas Registradas</h2>
+                <button class="btn-sort" onclick="toggleOrdenLlegadas()">Alternar Orden de Llegada ⇅</button>
+            </div>
+
             <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                 <table id="tabla-llegadas-est">
-                    <thead><tr><th>Sucursal</th><th>Llegada</th><th>Tipo</th></tr></thead>
+                    <thead><tr><th>Fecha</th><th>Sucursal</th><th>Llegada</th><th>Tipo</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
 
             <div style="margin: 40px 0; border-top: 2px dashed #ddd;"></div>
 
-            <!-- SECCIÓN 2: ANÁLISIS DE TIEMPOS -->
+            <!-- SECCIÓN 3: ANÁLISIS DE TIEMPOS -->
             <h2>Análisis de Tiempos de Llegada</h2>
-            <div class="form-row" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
-                <div class="form-col" style="max-width: 300px;">
-                    <label>Seleccionar Mes:</label>
-                    <input type="month" id="mes-stats" onchange="generarEstadisticas()">
-                </div>
-                <div class="form-col" style="max-width: 300px;">
-                    <label>Filtrar Supervisor:</label>
-                    <select id="supervisor-stats" onchange="generarEstadisticas()">
-                        <option value="TODOS">Todos</option>
-                        <option value="ADRIANA">Adriana</option>
-                        <option value="CITLALLI">Citlalli</option>
-                        <option value="KARLA">Karla</option>
-                        <option value="LEONARDO">Leonardo</option>
-                        <option value="NOEMI">Noemí</option>
-                    </select>
-                </div>
-            </div>
             
             <h3 style="color: var(--primary);">Promedios PT (Regular)</h3>
             <canvas id="graficaLlegadasPT" height="100"></canvas>
@@ -264,15 +259,11 @@
 
             <div style="margin: 40px 0; border-top: 2px dashed #ddd;"></div>
 
-            <!-- SECCIÓN 3: ESTADÍSTICAS DE INCIDENCIAS -->
+            <!-- SECCIÓN 4: ESTADÍSTICAS DE INCIDENCIAS -->
             <h2>Estadísticas de Movimientos y Top Productos</h2>
             <div class="form-row" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
                 <div class="form-col">
-                    <label>Mes:</label>
-                    <input type="month" id="mes-inc-est" onchange="renderStatsIncidencias()">
-                </div>
-                <div class="form-col">
-                    <label>Estado:</label>
+                    <label>Filtrar por Estado:</label>
                     <select id="filtro-inc-estado" onchange="renderStatsIncidencias()">
                         <option value="TODOS">Todos</option>
                         <option value="FALTÓ">Faltó en ruta</option>
@@ -281,7 +272,7 @@
                     </select>
                 </div>
                 <div class="form-col">
-                    <label>Sucursal/Zona:</label>
+                    <label>Filtrar por Sucursal/Zona:</label>
                     <select id="filtro-inc-sucursal" onchange="renderStatsIncidencias()">
                         <option value="TODAS">Todas las Sucursales</option>
                     </select>
@@ -313,16 +304,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-
-            <div style="margin: 40px 0; border-top: 2px dashed #ddd;"></div>
-
-            <h2>Promedio de Llegada por Sucursal</h2>
-            <div class="table-responsive">
-                <table id="tabla-promedios-llegada">
-                    <thead><tr><th>Sucursal</th><th>Promedio PT</th><th>Promedio PT PAX</th></tr></thead>
-                    <tbody></tbody>
-                </table>
             </div>
         </div>
 
@@ -438,19 +419,25 @@
             evt.currentTarget.classList.add("active");
 
             if(tabName === 'Historial') renderHistorial();
-            if(tabName === 'Estadisticas') { renderLlegadasHoy(); generarEstadisticas(); renderStatsIncidencias(); }
+            if(tabName === 'Estadisticas') { actualizarEstadisticasGlobales(); }
+        }
+
+        // Función unificadora para refrescar todo en la pestaña estadísticas con los filtros superiores
+        function actualizarEstadisticasGlobales() {
+            renderLlegadasHoy(); 
+            generarEstadisticas(); 
+            renderStatsIncidencias();
         }
 
         window.onload = function() {
             const hoy = getHoyStr();
             fechaInput.value = hoy;
-            document.getElementById('fecha-llegadas-est').value = hoy;
             fechaInput.addEventListener('change', () => actualizarCuadricula());
 
             const d = new Date();
             const mesActual = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0');
-            document.getElementById("mes-stats").value = mesActual;
-            document.getElementById("mes-inc-est").value = mesActual;
+            // Inicializamos el nuevo filtro global y el historial
+            document.getElementById("filtro-mes-global").value = mesActual;
             document.getElementById("filtro-mes-historial").value = mesActual;
 
             const selectSucursal = document.getElementById("sucursal");
@@ -483,8 +470,7 @@
                     incidenciasLocales = data.incidencias || [];
                     
                     actualizarCuadricula();
-                    renderLlegadasHoy();
-                    renderStatsIncidencias();
+                    actualizarEstadisticasGlobales();
                     loader.style.display = 'none';
                 })
                 .catch(err => { alert("Error cargando DB."); loader.style.display = 'none'; });
@@ -500,17 +486,18 @@
             });
         }
 
-        // --- LLEGADAS DEL DÍA (EN ESTADÍSTICAS) ---
+        // --- LLEGADAS (AHORA FILTRA POR MES GLOBAL) ---
         function toggleOrdenLlegadas() { ordenLlegadasAsc = !ordenLlegadasAsc; renderLlegadasHoy(); }
         function renderLlegadasHoy() {
             const tbody = document.querySelector("#tabla-llegadas-est tbody");
             if(!tbody) return;
             tbody.innerHTML = "";
             
-            const fechaFiltrada = document.getElementById('fecha-llegadas-est').value;
-            const supervisor = document.getElementById('sup-llegadas-est').value;
+            const mesFiltrado = document.getElementById('filtro-mes-global').value;
+            const supervisor = document.getElementById('filtro-sup-global').value;
 
-            let llegadas = registros.filter(r => r.fecha === fechaFiltrada);
+            // En lugar de ser por día, filtramos por el mes global seleccionado
+            let llegadas = registros.filter(r => r.fecha && r.fecha.substring(0,7) === mesFiltrado);
 
             if(supervisor !== "TODOS") {
                 const sucursalesDelSup = sucursales.filter(s => s.supervisor === supervisor).map(s => s.id);
@@ -524,7 +511,8 @@
 
             llegadas.forEach(r => {
                 let badge = r.tipoProducto === 'PT PAX' ? 'badge pax' : 'badge pt';
-                tbody.innerHTML += `<tr><td><b>${r.sucursal}</b></td><td>${r.horaLlegada}</td><td><span class="${badge}">${r.tipoProducto||'PT'}</span></td></tr>`;
+                // Añadí la fecha para que tenga sentido al ver todo el mes
+                tbody.innerHTML += `<tr><td>${r.fecha}</td><td><b>${r.sucursal}</b></td><td>${r.horaLlegada}</td><td><span class="${badge}">${r.tipoProducto||'PT'}</span></td></tr>`;
             });
         }
 
@@ -544,7 +532,7 @@
             .then(response => {
                 registros.push(nuevoRegistro); 
                 actualizarCuadricula(); 
-                renderLlegadasHoy();
+                actualizarEstadisticasGlobales();
                 const d = document.getElementById("fechaRegistro").value; 
                 this.reset(); 
                 document.getElementById("fechaRegistro").value = d;
@@ -581,7 +569,6 @@
             .then(res => res.json())
             .then(response => {
                 if(response.status === "exito"){
-                    // Le asignamos la fecha local de hoy para que se refleje de inmediato en las stats sin recargar
                     nuevaInc.fecha = getHoyStr(); 
                     incidenciasLocales.push(nuevaInc);
                     this.reset(); 
@@ -596,14 +583,14 @@
             .finally(() => loader.style.display = 'none');
         });
 
+        // --- ESTADÍSTICAS INCIDENCIAS (AHORA USA FILTRO GLOBAL DE MES) ---
         function renderStatsIncidencias() {
-            const mes = document.getElementById("mes-inc-est").value;
+            const mes = document.getElementById("filtro-mes-global").value;
             const filtroEdo = document.getElementById("filtro-inc-estado").value;
             const filtroSuc = document.getElementById("filtro-inc-sucursal").value;
             
             let dataList = incidenciasLocales;
             
-            // Filtrar por Mes (si la base de datos trae la fecha)
             if(mes) {
                 dataList = dataList.filter(i => i.fecha && i.fecha.substring(0,7) === mes);
             }
@@ -626,7 +613,6 @@
             document.getElementById("total-dinero-pt").innerText = "$" + totalPT.toLocaleString('es-MX', {minimumFractionDigits: 2});
             document.getElementById("total-dinero-pax").innerText = "$" + totalPAX.toLocaleString('es-MX', {minimumFractionDigits: 2});
 
-            // Ordenar Top por CANTIDAD (de mayor a menor)
             let topArr = Object.keys(conteoProd).map(k => ({ nombre: k, cant: conteoProd[k].cant, valor: conteoProd[k].valor }));
             topArr.sort((a,b) => b.cant - a.cant);
 
@@ -653,19 +639,18 @@
             });
         }
 
+        // --- ANÁLISIS DE TIEMPOS (AHORA USA FILTRO GLOBAL DE MES) ---
         function generarEstadisticas() {
-            const mes = document.getElementById("mes-stats").value; 
-            const sup = document.getElementById("supervisor-stats").value;
+            const mes = document.getElementById("filtro-mes-global").value; 
+            const sup = document.getElementById("filtro-sup-global").value;
             if(!mes) return;
 
             const sucFiltradas = sup === "TODOS" ? sucursales : sucursales.filter(s => s.supervisor === sup);
             const regs = registros.filter(r => r.fecha && r.fecha.substring(0,7) === mes && !r.esSegundaVuelta);
 
-            // Generar Gráficas
             procesarGrafica(regs.filter(r => r.tipoProducto !== "PT PAX"), sucFiltradas, "graficaLlegadasPT", "PT", chartPT, (c) => chartPT = c);
             procesarGrafica(regs.filter(r => r.tipoProducto === "PT PAX"), sucFiltradas, "graficaLlegadasPAX", "PAX", chartPAX, (c) => chartPAX = c);
 
-            // Calcular y llenar tabla de promedios
             const tbodyProm = document.querySelector("#tabla-promedios-llegada tbody");
             tbodyProm.innerHTML = "";
             
