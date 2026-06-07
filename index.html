@@ -413,7 +413,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "AQUI_PEGA_TU_URL"; // IMPORTANTE: Pegar el nuevo URL de tu Script
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwi96-VgxcYdhb_h2vCLb2nVbUmxqgQV-_RQYGPJHxrmPTbHMpR5Rs_F6pGaGMYNPWb/exec"; // IMPORTANTE: Pegar el nuevo URL de tu Script
         
         const sucursales = [
             { id: "ACA", name: "AVILA CAMACHO", supervisor: "ADRIANA" }, { id: "IND", name: "INDEPENDENCIA", supervisor: "ADRIANA" },
@@ -545,7 +545,7 @@
         };
 
         function fetchRegistros() {
-            if(SCRIPT_URL === "https://script.google.com/macros/s/AKfycbwi96-VgxcYdhb_h2vCLb2nVbUmxqgQV-_RQYGPJHxrmPTbHMpR5Rs_F6pGaGMYNPWb/exec") return;
+            if(SCRIPT_URL === "AQUI_PEGA_TU_URL") return;
             loader.style.display = 'flex';
             fetch(SCRIPT_URL)
                 .then(res => res.json())
