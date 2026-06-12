@@ -100,7 +100,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.6</div>
+    <div class="version-tag">v1.1.7</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -786,19 +786,28 @@
 
         function verificarEstadoMotivo() {
             const estado = document.getElementById("inc-estado").value;
-            const colMotivo = document.getElementById("col-inc-motivo");
-            const colJuliano = document.getElementById("col-inc-juliano");
-            const colOrigen = document.getElementById("col-inc-origen"); // Nuevo contenedor
+            const divMotivo = document.getElementById("div-motivo");
+            const selectMotivo = document.getElementById("inc-motivo");
+            const colOrigen = document.getElementById("col-inc-origen");
+            const divJuliano = document.getElementById("div-juliano");
+            const inputJuliano = document.getElementById("inc-juliano");
 
-            if (estado === "SE REGRESÓ" || estado === "SE REGRESÓ A PLANTA") {
-                if(colMotivo) colMotivo.style.display = "block";
-                if(colJuliano) colJuliano.style.display = "block";
-                if(colOrigen) colOrigen.style.display = "block"; // Se muestra si se regresa a planta
+            // Si seleccionan "SE REGRESÓ" (Se regresó a planta)
+            if (estado === "SE REGRESÓ") {
+                divMotivo.style.display = "flex";    // Muestra la fila del motivo
+                colOrigen.style.display = "block";   // Muestra la pregunta de ¿Dónde se originó? (Vuelta/Tienda)
+                selectMotivo.required = true;        // Hace que sea obligatorio elegir motivo
             } else {
-                if(colMotivo) colMotivo.style.display = "none";
-                if(colJuliano) colJuliano.style.display = "none";
-                if(colOrigen) colOrigen.style.display = "none";
-                document.getElementById("inc-origen").value = "En la vuelta"; // Reseteo por defecto
+                // Si es "FALTÓ" o "LLEGÓ DE MÁS", ocultamos todo
+                divMotivo.style.display = "none";
+                colOrigen.style.display = "none";
+                selectMotivo.required = false;
+        
+                // Limpiamos los campos para no mandar datos fantasma a Google Sheets
+                selectMotivo.value = "";
+                document.getElementById("inc-origen").value = "En la vuelta"; 
+                if (divJuliano) divJuliano.style.display = "none";
+                if (inputJuliano) inputJuliano.value = "";
             }
         }
 
@@ -874,14 +883,35 @@
             const sup = document.getElementById("est-sup").value;
 
             let sucFilt = sup === "TODOS" ? sucursales.slice() : sucursales.filter(s => s.supervisor === sup).slice();
-            const regs = registros.filter(r => pasaFiltroTiempo(r.fecha, tipoT, mes, sem) && !r.esSegundaVuelta);
+            
+            // 1. EL COLADOR ESTRICTO (Filtra de raíz todo lo que no sirva)
+            const regs = registros.filter(r => {
+                const pasaTiempo = pasaFiltroTiempo(r.fecha, tipoT, mes, sem);
+                // Aseguramos estrictamente que sea la primera vuelta (falso a la segunda vuelta)
+                const esPrimeraVuelta = r.esSegundaVuelta === false; 
+                // Aseguramos estrictamente que sea PT (ignorando PAX)
+                const esPT = r.tipoProducto === "PT";
+                // Evitamos celdas en blanco o errores de captura
+                const tieneHora = r.horaLlegada && r.horaLlegada.trim() !== "";
 
+                return pasaTiempo && esPrimeraVuelta && esPT && tieneHora;
+            });
+
+            // 2. EL CÁLCULO DE PROMEDIOS
             let datosSuc = sucFilt.map(s => {
-                const rPT = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT" && r.horaLlegada);
-                const rPAX = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT PAX" && r.horaLlegada);
+                // Como la variable "regs" ya viene completamente limpia, solo agrupamos por sucursal
+                const rPT = regs.filter(r => r.sucursal === s.id);
+                
+                // Calculamos el promedio solo de lo que pasó el colador
                 const vPT = rPT.length > 0 ? (rPT.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPT.length) : 999999;
-                const vPAX = rPAX.length > 0 ? (rPAX.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPAX.length) : 999999;
-                return { ...s, valPT: vPT, valPAX: vPAX, strPT: vPT !== 999999 ? minsToTime(vPT) : "-", strPAX: vPAX !== 999999 ? minsToTime(vPAX) : "-" };
+                
+                return { 
+                    ...s, 
+                    valPT: vPT, 
+                    strPT: vPT !== 999999 ? minsToTime(vPT) : "-",
+                    valPAX: 999999, // Matemáticamente anulamos el PAX para que no afecte el orden de tu tabla
+                    strPAX: "-"     // Forzamos a que la columna de PAX en tu tabla muestre un guion (-)
+                };
             });
 
             datosSuc.sort((a, b) => {
