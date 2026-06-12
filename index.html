@@ -100,7 +100,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.7</div>
+    <div class="version-tag">v1.1.8</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -884,40 +884,38 @@
 
             let sucFilt = sup === "TODOS" ? sucursales.slice() : sucursales.filter(s => s.supervisor === sup).slice();
             
-            // 1. EL COLADOR ESTRICTO (Filtra de raíz todo lo que no sirva)
+            // 1. EL COLADOR A PRUEBA DE FALLOS (DEBUGGEADO)
             const regs = registros.filter(r => {
+                // a) Validar el tiempo (mes/semana)
                 const pasaTiempo = pasaFiltroTiempo(r.fecha, tipoT, mes, sem);
-                // Aseguramos estrictamente que sea la primera vuelta (falso a la segunda vuelta)
-                const esPrimeraVuelta = r.esSegundaVuelta === false; 
-                // Aseguramos estrictamente que sea PT (ignorando PAX)
-                const esPT = r.tipoProducto === "PT";
-                // Evitamos celdas en blanco o errores de captura
-                const tieneHora = r.horaLlegada && r.horaLlegada.trim() !== "";
+                
+                // b) Validar 1ra vuelta: Tolera que el dato sea false, la palabra "No", nulo o vacío
+                const esPrimeraVuelta = !r.esSegundaVuelta || r.esSegundaVuelta === "No" || r.esSegundaVuelta === "false"; 
+                
+                // c) Validar PT: Si el registro es viejo y no tiene tipo, ASUMIMOS que es PT por defecto.
+                // Si sí tiene, lo convertimos a texto, quitamos espacios y exigimos que sea PT.
+                const esPT = !r.tipoProducto || String(r.tipoProducto).trim().toUpperCase() === "PT";
+                
+                // d) Validar Hora: Convertimos la hora a string de forma segura para que .trim() no rompa la página
+                const tieneHora = r.horaLlegada && String(r.horaLlegada).trim() !== "";
 
+                // Solo pasa si cumple todo
                 return pasaTiempo && esPrimeraVuelta && esPT && tieneHora;
             });
 
             // 2. EL CÁLCULO DE PROMEDIOS
             let datosSuc = sucFilt.map(s => {
-                // Como la variable "regs" ya viene completamente limpia, solo agrupamos por sucursal
                 const rPT = regs.filter(r => r.sucursal === s.id);
                 
-                // Calculamos el promedio solo de lo que pasó el colador
                 const vPT = rPT.length > 0 ? (rPT.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPT.length) : 999999;
                 
                 return { 
                     ...s, 
                     valPT: vPT, 
                     strPT: vPT !== 999999 ? minsToTime(vPT) : "-",
-                    valPAX: 999999, // Matemáticamente anulamos el PAX para que no afecte el orden de tu tabla
-                    strPAX: "-"     // Forzamos a que la columna de PAX en tu tabla muestre un guion (-)
+                    valPAX: 999999, 
+                    strPAX: "-"     
                 };
-            });
-
-            datosSuc.sort((a, b) => {
-                if (a.valPT === 999999 && b.valPT === 999999) return a.id.localeCompare(b.id);
-                if (a.valPT === 999999) return 1; if (b.valPT === 999999) return -1;
-                return ordenPromediosAsc ? (a.valPT - b.valPT) : (b.valPT - a.valPT);
             });
 
             procesarGrafica(regs.filter(r=>r.tipoProducto!=="PT PAX"), datosSuc, "graficaLlegadasPT", "PT", chartPT, (c)=>chartPT=c);
