@@ -100,7 +100,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.8</div>
+    <div class="version-tag">v1.1.9</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -883,39 +883,24 @@
             const sup = document.getElementById("est-sup").value;
 
             let sucFilt = sup === "TODOS" ? sucursales.slice() : sucursales.filter(s => s.supervisor === sup).slice();
-            
-            // 1. EL COLADOR A PRUEBA DE FALLOS (DEBUGGEADO)
+
+            // CORRECCIÓN AQUÍ:
             const regs = registros.filter(r => {
-                // a) Validar el tiempo (mes/semana)
-                const pasaTiempo = pasaFiltroTiempo(r.fecha, tipoT, mes, sem);
+                // 1. Filtro de fecha
+                if (!pasaFiltroTiempo(r.fecha, tipoT, mes, sem)) return false;
                 
-                // b) Validar 1ra vuelta: Tolera que el dato sea false, la palabra "No", nulo o vacío
-                const esPrimeraVuelta = !r.esSegundaVuelta || r.esSegundaVuelta === "No" || r.esSegundaVuelta === "false"; 
-                
-                // c) Validar PT: Si el registro es viejo y no tiene tipo, ASUMIMOS que es PT por defecto.
-                // Si sí tiene, lo convertimos a texto, quitamos espacios y exigimos que sea PT.
-                const esPT = !r.tipoProducto || String(r.tipoProducto).trim().toUpperCase() === "PT";
-                
-                // d) Validar Hora: Convertimos la hora a string de forma segura para que .trim() no rompa la página
-                const tieneHora = r.horaLlegada && String(r.horaLlegada).trim() !== "";
+                // 2. Filtro de Primera Vuelta (Detecta el texto "No" del CSV)
+                const esSegunda = (r.esSegundaVuelta === "Sí" || r.esSegundaVuelta === true);
+                if (esSegunda) return false;
 
-                // Solo pasa si cumple todo
-                return pasaTiempo && esPrimeraVuelta && esPT && tieneHora;
-            });
+                // 3. Filtro de Producto (Detecta "PT" ignorando espacios)
+                const esPT = r.tipoProducto && r.tipoProducto.toString().trim() === "PT";
+                if (!esPT) return false;
 
-            // 2. EL CÁLCULO DE PROMEDIOS
-            let datosSuc = sucFilt.map(s => {
-                const rPT = regs.filter(r => r.sucursal === s.id);
-                
-                const vPT = rPT.length > 0 ? (rPT.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPT.length) : 999999;
-                
-                return { 
-                    ...s, 
-                    valPT: vPT, 
-                    strPT: vPT !== 999999 ? minsToTime(vPT) : "-",
-                    valPAX: 999999, 
-                    strPAX: "-"     
-                };
+                // 4. Asegurar que haya hora
+                if (!r.horaLlegada) return false;
+
+                return true;
             });
 
             procesarGrafica(regs.filter(r=>r.tipoProducto!=="PT PAX"), datosSuc, "graficaLlegadasPT", "PT", chartPT, (c)=>chartPT=c);
