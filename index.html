@@ -881,51 +881,41 @@
             const mes = document.getElementById("est-mes").value;
             const sem = document.getElementById("est-semana").value;
             const sup = document.getElementById("est-sup").value;
-
+        
             let sucFilt = sup === "TODOS" ? sucursales.slice() : sucursales.filter(s => s.supervisor === sup).slice();
 
-            // CORRECCIÓN AQUÍ:
+            // 1. FILTRADO (El colador)
             const regs = registros.filter(r => {
-                // 1. Filtro de fecha
                 if (!pasaFiltroTiempo(r.fecha, tipoT, mes, sem)) return false;
-                
-                // 2. Filtro de Primera Vuelta (Detecta el texto "No" del CSV)
                 const esSegunda = (r.esSegundaVuelta === "Sí" || r.esSegundaVuelta === true);
                 if (esSegunda) return false;
-
-                // 3. Filtro de Producto (Detecta "PT" ignorando espacios)
-                const esPT = r.tipoProducto && r.tipoProducto.toString().trim() === "PT";
-                if (!esPT) return false;
-
-                // 4. Asegurar que haya hora
                 if (!r.horaLlegada) return false;
-
                 return true;
             });
 
-            procesarGrafica(regs.filter(r=>r.tipoProducto!=="PT PAX"), datosSuc, "graficaLlegadasPT", "PT", chartPT, (c)=>chartPT=c);
-            procesarGrafica(regs.filter(r=>r.tipoProducto==="PT PAX"), datosSuc, "graficaLlegadasPAX", "PAX", chartPAX, (c)=>chartPAX=c);
+            // 2. CALCULO DE DATOS (Esta es la parte que te faltaba)
+            let datosSuc = sucFilt.map(s => {
+                const rPT = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT");
+                const rPAX = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT PAX");
+                
+                const vPT = rPT.length > 0 ? (rPT.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPT.length) : 999999;
+                const vPAX = rPAX.length > 0 ? (rPAX.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPAX.length) : 999999;
+                
+                return { 
+                    ...s, 
+                    strPT: vPT !== 999999 ? minsToTime(vPT) : "-", 
+                    strPAX: vPAX !== 999999 ? minsToTime(vPAX) : "-" 
+                };
+            });
 
+            // 3. ACTUALIZACIÓN DE GRÁFICAS
+            procesarGrafica(regs.filter(r => r.tipoProducto === "PT"), datosSuc, "graficaLlegadasPT", "PT", chartPT, (c) => chartPT = c);
+            procesarGrafica(regs.filter(r => r.tipoProducto === "PT PAX"), datosSuc, "graficaLlegadasPAX", "PAX", chartPAX, (c) => chartPAX = c);
+
+            // 4. ACTUALIZACIÓN DE TABLA
             const tbody = document.querySelector("#tabla-promedios-llegada tbody");
             tbody.innerHTML = "";
-            datosSuc.forEach(s => tbody.innerHTML += `<tr><td><b>${s.id}</b></td><td>${s.strPT}</td><td>${s.strPAX}</td></tr>`);
-        }
-
-        function procesarGrafica(datos, sucList, idCanvas, tipo, chartRef, updateChartRef) {
-            let labelsChart = [], dataChart = [];
-            sucList.forEach(s => {
-                let rSuc = datos.filter(r => r.sucursal === s.id && r.horaLlegada);
-                if(rSuc.length > 0) { labelsChart.push(s.id); dataChart.push((rSuc.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rSuc.length) / 60); }
-            });
-            const ctx = document.getElementById(idCanvas).getContext('2d');
-            if(chartRef) chartRef.destroy();
-            let c = new Chart(ctx, {
-                type: 'bar',
-                data: { labels: labelsChart, datasets: [{ label: `Promedio (${tipo})`, data: dataChart, backgroundColor: tipo==="PAX"?'#FF203B':'#00763A', borderRadius: 4 }] },
-                options: { responsive: true, scales: { y: { beginAtZero: false, min: 5, ticks: { callback: function(v){return minsToTime(v*60);} } } },
-                           plugins: { tooltip: { callbacks: { label: function(ctx){return "Llegada: " + minsToTime(ctx.raw*60);} } } } }
-            });
-            updateChartRef(c);
+            datosSuc.forEach(s => tbody.innerHTML += <tr><td><b>${s.id}</b></td><td>${s.strPT}</td><td>${s.strPAX}</td></tr>);
         }
 
         function renderStatsIncidencias() {
