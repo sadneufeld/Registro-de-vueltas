@@ -100,7 +100,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.5</div>
+    <div class="version-tag">v1.1.6</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -227,6 +227,13 @@
                             <option value="Lateral dañado">Lateral dañado</option>
                             <option value="Domo roto">Domo roto</option>
                             <option value="Quebradas">Quebradas</option>
+                        </select>
+                    </div>
+                    <div class="form-col" id="col-inc-origen" style="display: none; max-width: 300px;">
+                        <label>¿Dónde se originó el regreso?</label>
+                        <select id="inc-origen">
+                            <option value="En la vuelta">En la vuelta</option>
+                            <option value="En sucursal">En sucursal</option>
                         </select>
                     </div>
                     <div class="form-col" id="div-juliano" style="display: none;">
@@ -779,17 +786,19 @@
 
         function verificarEstadoMotivo() {
             const estado = document.getElementById("inc-estado").value;
-            const divMotivo = document.getElementById("div-motivo");
-            const selMotivo = document.getElementById("inc-motivo");
-            
-            if (estado === "SE REGRESÓ") {
-                divMotivo.style.display = "flex";
-                selMotivo.required = true;
+            const colMotivo = document.getElementById("col-inc-motivo");
+            const colJuliano = document.getElementById("col-inc-juliano");
+            const colOrigen = document.getElementById("col-inc-origen"); // Nuevo contenedor
+
+            if (estado === "SE REGRESÓ" || estado === "SE REGRESÓ A PLANTA") {
+                if(colMotivo) colMotivo.style.display = "block";
+                if(colJuliano) colJuliano.style.display = "block";
+                if(colOrigen) colOrigen.style.display = "block"; // Se muestra si se regresa a planta
             } else {
-                divMotivo.style.display = "none";
-                selMotivo.required = false;
-                selMotivo.value = "";
-                verificarJuliano(); 
+                if(colMotivo) colMotivo.style.display = "none";
+                if(colJuliano) colJuliano.style.display = "none";
+                if(colOrigen) colOrigen.style.display = "none";
+                document.getElementById("inc-origen").value = "En la vuelta"; // Reseteo por defecto
             }
         }
 
@@ -812,10 +821,17 @@
             e.preventDefault();
             const prodObj = productosDB.find(p => p.nombre === document.getElementById("inc-producto").value);
             const nuevaInc = {
-                tipoRegistro: "INCIDENCIA", sucursal: document.getElementById("inc-sucursal").value, tipo: document.getElementById("inc-tipo").value,
-                producto: prodObj.nombre, precio: prodObj.precio, cantidad: parseInt(document.getElementById("inc-cantidad").value),
+                tipoRegistro: "INCIDENCIA", 
+                sucursal: document.getElementById("inc-sucursal").value, 
+                tipo: document.getElementById("inc-tipo").value,
+                producto: prodObj.nombre, 
+                precio: prodObj.precio, 
+                cantidad: parseInt(document.getElementById("inc-cantidad").value),
                 estado: document.getElementById("inc-estado").value,
-                motivo: document.getElementById("inc-motivo").value, juliano: document.getElementById("inc-juliano").value
+                motivo: document.getElementById("inc-motivo").value, 
+                juliano: document.getElementById("inc-juliano").value,
+                // NUEVO: Agregamos el origen solo si el estado es "SE REGRESÓ"
+                origen: document.getElementById("inc-estado").value === "SE REGRESÓ" ? document.getElementById("inc-origen").value : ""
             };
             
             loader.style.display = 'flex';
@@ -823,9 +839,15 @@
             .then(res => res.json())
             .then(res => {
                 if(res.status === "exito"){
-                    nuevaInc.fecha = getHoyStr(); incidenciasLocales.push(nuevaInc);
-                    this.reset(); document.getElementById("inc-tipo").value="PT"; 
-                    cargarProductosDropdown(); verificarEstadoMotivo(); renderStatsIncidencias(); renderHistorialIncidencias();
+                    nuevaInc.fecha = getHoyStr(); 
+                    incidenciasLocales.push(nuevaInc);
+                    this.reset(); 
+                    document.getElementById("inc-tipo").value="PT"; 
+                    document.getElementById("inc-origen").value="En la vuelta"; // Reseteamos el select nuevo
+                    cargarProductosDropdown(); 
+                    verificarEstadoMotivo(); 
+                    renderStatsIncidencias(); 
+                    renderHistorialIncidencias();
                 } else alert("Error: " + res.mensaje);
             }).finally(() => loader.style.display = 'none');
         });
