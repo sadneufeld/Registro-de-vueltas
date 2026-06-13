@@ -12,7 +12,6 @@
             --primary-dark: #005A2C;
             --primary-light: #E6F2EB;
             --pt-pax: #FF203B;
-            --pt-pax-light: #FFE8EA;
             --secondary: #8BC34A;
             --bg-body: #F4F7F6;
             --text-dark: #2C3E50;
@@ -20,17 +19,21 @@
             --border-color: #D1D9E6;
         }
 
-        body { font-family: 'Inter', sans-serif; margin: 0; padding: 20px; background-color: var(--bg-body); color: var(--text-dark); }
-        .container { max-width: 1200px; margin: 0 auto; }
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 20px; background-color: var(--bg-body); color: var(--text-dark); position: relative; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding-bottom: 50px; }
         
-        h1 { color: var(--primary); text-align: center; font-size: 2.2rem; margin-bottom: 30px; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; display: inline-block; }
+        /* Logo y Versión */
+        .logo-img { position: absolute; top: 20px; left: 20px; width: 140px; }
+        .version-tag { position: fixed; bottom: 10px; left: 15px; font-size: 12px; color: #888; font-weight: bold; }
+        
+        h1 { color: var(--primary); text-align: center; font-size: 2.2rem; margin-bottom: 30px; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; display: inline-block; margin-top: 40px; }
         h2, h3 { color: var(--primary-dark); }
         
         /* Pestañas */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .tab { padding: 12px 25px; cursor: pointer; background: var(--white); border: 1px solid var(--border-color); color: var(--text-dark); font-size: 15px; font-weight: 600; border-radius: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .tab { padding: 12px 20px; cursor: pointer; background: var(--white); border: 1px solid var(--border-color); color: var(--text-dark); font-size: 14px; font-weight: 600; border-radius: 8px; transition: all 0.3s; }
         .tab:hover { background: var(--primary-light); }
-        .tab.active { background: var(--primary); color: var(--white); border-color: var(--primary); box-shadow: 0 4px 8px rgba(0, 118, 58, 0.3); }
+        .tab.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
         .tab-content { display: none; background: var(--white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -43,65 +46,68 @@
         /* Cuadrícula */
         .grid-header { display: flex; justify-content: space-between; align-items: center; background: var(--primary-light); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 12px; margin-bottom: 30px; }
-        .grid-item { padding: 15px 5px; text-align: center; background: var(--white); border: 2px solid var(--border-color); border-radius: 8px; font-weight: 700; font-size: 15px; color: var(--text-dark); transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .grid-item.registrada { background: var(--primary); color: var(--white); border-color: var(--primary-dark); box-shadow: 0 4px 10px rgba(0, 118, 58, 0.4); }
+        .grid-item { padding: 15px 5px; text-align: center; background: var(--white); border: 2px solid var(--border-color); border-radius: 8px; font-weight: 700; font-size: 15px; color: var(--text-dark); }
+        .grid-item.registrada { background: var(--primary); color: var(--white); border-color: var(--primary-dark); }
 
         /* Formularios */
         .form-row { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
         .form-col { flex: 1; min-width: 250px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: var(--text-dark); }
-        input[type="text"], input[type="time"], input[type="date"], input[type="month"], select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: 'Inter', sans-serif; background-color: #fafbfc; transition: border 0.3s; }
-        input:focus, select:focus { outline: none; border-color: var(--primary); background-color: var(--white); }
+        input[type="text"], input[type="number"], input[type="time"], input[type="date"], input[type="month"], select { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
-        .radio-group-container { display: flex; gap: 20px; background: var(--white); padding: 15px; border: 1px solid var(--border-color); border-radius: 6px; }
-        .radio-option { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 16px; }
-        .radio-option input { width: 20px; height: 20px; accent-color: var(--primary); }
-        .radio-option.pax input { accent-color: var(--pt-pax); }
+        .radio-group-container { display: flex; gap: 20px; background: var(--white); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; }
+        .radio-option { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .radio-option.pt span { color: var(--primary); }
+        .radio-option.pax span { color: var(--pt-pax); }
 
         .checkbox-group { display: flex; align-items: center; gap: 10px; background: var(--primary-light); padding: 15px; border-radius: 6px; margin-bottom: 20px; }
-        .checkbox-group input { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); }
         
-        button.btn-submit { background: var(--primary); color: var(--white); border: none; padding: 14px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; transition: background 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button.btn-submit { background: var(--primary); color: var(--white); border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; }
         button.btn-submit:hover { background: var(--primary-dark); }
         .btn-sync { background: var(--secondary); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-sort { background: var(--text-dark); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
 
         /* Tablas */
         .table-responsive { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--white); }
-        th, td { border-bottom: 1px solid var(--border-color); padding: 15px; text-align: left; }
-        th { background-color: var(--primary); color: var(--white); font-weight: 600; white-space: nowrap; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--white); font-size: 14px; }
+        th, td { border-bottom: 1px solid var(--border-color); padding: 12px; text-align: left; }
+        th { background-color: var(--primary); color: var(--white); white-space: nowrap; }
         tr:hover { background-color: #f9f9f9; }
-        .alert { padding: 12px 15px; background: #FFF3CD; color: #856404; border-left: 5px solid #FFEEBA; margin-bottom: 10px; border-radius: 4px; }
         
         .badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; color: white; }
         .badge.pt { background: var(--primary); }
         .badge.pax { background: var(--pt-pax); }
-        .badge.vuelta2 { background: var(--text-dark); }
-
-        .stats-divider { border-top: 2px dashed var(--border-color); margin: 40px 0; }
         
-        @media (max-width: 800px) { .tabs { flex-wrap: wrap; } .tab { flex-grow: 1; text-align: center; } }
+        .money { color: var(--primary-dark); font-weight: bold; }
+        .top-card { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
+        .top-card h4 { margin: 0 0 10px 0; color: var(--text-dark); }
+        .top-card p { margin: 0; font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+
+        @media (max-width: 800px) { .logo-img { position: relative; top: 0; left: 0; display: block; margin: 0 auto; } }
     </style>
 </head>
 <body>
 
+    <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
+    <div class="version-tag">v1.1.3</div>
+
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
-        <h3 style="margin-top: 15px;">Sincronizando...</h3>
+        <h3 style="margin-top: 15px;">Procesando...</h3>
     </div>
 
     <div class="container">
         <div style="text-align: center;">
-            <h1>Registro de Vueltas</h1>
+            <h1>Reporte de Vueltas</h1>
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="openTab(event, 'Registro')">Registro de Vueltas</button>
-            <button class="tab" onclick="openTab(event, 'Historial')">Historial Global</button>
+            <button class="tab active" onclick="openTab(event, 'Registro')">Registro de vueltas</button>
+            <button class="tab" onclick="openTab(event, 'Incidencias')">Registro de diferencias</button>
             <button class="tab" onclick="openTab(event, 'Estadisticas')">Estadísticas</button>
+            <button class="tab" onclick="openTab(event, 'Historial')">Historial de vueltas</button>
         </div>
 
-        <!-- PESTAÑA: REGISTRO -->
         <div id="Registro" class="tab-content active">
             <div class="grid-header">
                 <div>
@@ -111,102 +117,95 @@
                 <button class="btn-sync" onclick="fetchRegistros()">Actualizar Datos</button>
             </div>
             
-            <p style="font-size: 13px; color: #666; margin-top: -10px; margin-bottom: 20px;">* La cuadrícula solo se pinta de verde al registrar el producto <b>PT (1ra Vuelta)</b>. Sucursales en orden alfabético.</p>
+            <p style="font-size: 13px; color: #666; margin-top: -10px;">* La cuadrícula se pinta de verde al registrar la 1ra Vuelta PT.</p>
             <div class="grid" id="sucursales-grid"></div>
             
             <div style="background: var(--border-color); height: 1px; margin: 30px 0;"></div>
 
-            <h2>Nuevo Registro</h2>
-            <form id="registro-form">
-                <div class="form-row">
-                    <div class="form-col">
-                        <label>Seleccionar Sucursal:</label>
-                        <select id="sucursal" required>
-                            <option value="">-- Elige una sucursal --</option>
-                        </select>
-                    </div>
-                    <div class="form-col">
-                        <label>Almacén:</label>
-                        <div class="radio-group-container">
-                            <label class="radio-option">
-                                <input type="radio" name="tipoProducto" value="PT" checked> 
-                                <span style="font-weight: 700; color: var(--primary);">PT</span>
-                            </label>
-                            <label class="radio-option pax">
-                                <input type="radio" name="tipoProducto" value="PT PAX"> 
-                                <span style="font-weight: 700; color: var(--pt-pax);">PT PAX</span>
-                            </label>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h2>Nuevo Registro de Vuelta</h2>
+                <form id="registro-form">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label>Sucursal:</label>
+                            <select id="sucursal" required><option value="">-- Elige --</option></select>
+                        </div>
+                        <div class="form-col">
+                            <label>Almacén:</label>
+                            <div class="radio-group-container">
+                                <label class="radio-option pt"><input type="radio" name="tipoProducto" value="PT" checked><span>PT</span></label>
+                                <label class="radio-option pax"><input type="radio" name="tipoProducto" value="PT PAX"><span>PT PAX</span></label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-col">
-                        <label>Hora de llegada:</label>
-                        <input type="time" id="horaLlegada" required>
+                    <div class="form-row">
+                        <div class="form-col"><label>Llegada:</label><input type="time" id="horaLlegada" required></div>
+                        <div class="form-col"><label>Salida:</label><input type="time" id="horaSalida" required></div>
                     </div>
-                    <div class="form-col">
-                        <label>Hora de salida:</label>
-                        <input type="time" id="horaSalida" required>
+                    <div class="form-row">
+                        <div class="form-col"><label>Chofer:</label><input type="text" id="chofer" required></div>
+                        <div class="form-col"><label>Recibe (Tienda):</label><input type="text" id="recibe" required></div>
                     </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-col">
-                        <label>Chofer que entrega:</label>
-                        <input type="text" id="chofer" placeholder="Nombre del chofer" required>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="segundaVuelta">
+                        <label for="segundaVuelta" style="margin:0;">Es Segunda Vuelta</label>
                     </div>
-                    <div class="form-col">
-                        <label>Persona que recibe (Tienda):</label>
-                        <input type="text" id="recibe" placeholder="Nombre de quien recibe" required>
-                    </div>
-                </div>
-
-                <div class="checkbox-group">
-                    <input type="checkbox" id="segundaVuelta">
-                    <label for="segundaVuelta" style="margin:0;">Segunda Vuelta</label>
-                </div>
-
-                <button type="submit" class="btn-submit">Guardar Registro</button>
-            </form>
-        </div>
-
-        <!-- PESTAÑA: HISTORIAL -->
-        <div id="Historial" class="tab-content">
-            <h2>Historial Completo</h2>
-            <div class="table-responsive">
-                <table id="tabla-historial">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Sucursal</th>
-                            <th>Almacén</th>
-                            <th>Llegada</th>
-                            <th>Salida</th>
-                            <th>Chofer</th>
-                            <th>Recibe</th>
-                            <th>Vuelta</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                    <button type="submit" class="btn-submit">Guardar Vuelta</button>
+                </form>
             </div>
         </div>
 
-        <!-- PESTAÑA: ESTADÍSTICAS -->
+        <div id="Incidencias" class="tab-content">
+            <h2>Registro de Faltantes y Devoluciones</h2>
+            <form id="incidencias-form" style="background: #fdfdfd; padding: 20px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 30px;">
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Sucursal:</label>
+                        <select id="inc-sucursal" required><option value="">-- Elige --</option></select>
+                    </div>
+                    <div class="form-col">
+                        <label>Tipo de Almacén:</label>
+                        <select id="inc-tipo" onchange="cargarProductosDropdown()" required>
+                            <option value="PT">PT</option>
+                            <option value="PT PAX">PT PAX</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Producto:</label>
+                        <select id="inc-producto" required><option value="">-- Primero elige el tipo --</option></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Cantidad:</label>
+                        <input type="number" id="inc-cantidad" min="1" required>
+                    </div>
+                    <div class="form-col">
+                        <label>Estado / Movimiento:</label>
+                        <select id="inc-estado" required>
+                            <option value="FALTÓ">Faltó en ruta</option>
+                            <option value="LLEGÓ DE MÁS">Llegó de más</option>
+                            <option value="SE REGRESÓ">Se regresó a planta</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit" style="background: var(--text-dark);">Registrar Movimiento</button>
+            </form>
+        </div>
+
         <div id="Estadisticas" class="tab-content">
-            <h2>Análisis de Llegadas</h2>
             
-            <!-- FILTROS -->
-            <div class="form-row" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
+            <div class="form-row" style="background: #eef2f5; padding: 15px; border-radius: 8px; border: 2px solid var(--primary-light); margin-bottom: 25px;">
                 <div class="form-col" style="max-width: 300px;">
-                    <label>Seleccionar Mes de Análisis:</label>
-                    <input type="month" id="mes-stats" onchange="generarEstadisticas()">
+                    <label style="color: var(--primary-dark);">Filtro Global - Mes:</label>
+                    <input type="month" id="filtro-mes-global" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
                 </div>
                 <div class="form-col" style="max-width: 300px;">
-                    <label>Filtrar por Supervisor:</label>
-                    <select id="supervisor-stats" onchange="generarEstadisticas()">
-                        <option value="TODOS">Todos los Supervisores</option>
+                    <label style="color: var(--primary-dark);">Filtro Global - Supervisor:</label>
+                    <select id="filtro-sup-global" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
+                        <option value="TODOS">Todos</option>
                         <option value="ADRIANA">Adriana</option>
                         <option value="CITLALLI">Citlalli</option>
                         <option value="KARLA">Karla</option>
@@ -215,117 +214,181 @@
                     </select>
                 </div>
             </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2 style="margin: 0;">Promedio de Llegada por Sucursal</h2>
+                <button class="btn-sort" onclick="toggleOrdenPromedios()">Alternar Orden de Llegada ⇅</button>
+            </div>
+            <div class="table-responsive" style="margin-bottom: 30px;">
+                <table id="tabla-promedios-llegada">
+                    <thead><tr><th>Sucursal</th><th>Promedio PT</th><th>Promedio PT PAX</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div style="margin: 40px 0; border-top: 2px dashed #ddd;"></div>
+
+            <h2>Análisis de Tiempos de Llegada</h2>
             
-            <!-- SECCIÓN PT -->
-            <h2 style="color: var(--primary);">Estadísticas PT (Regular)</h2>
+            <h3 style="color: var(--primary);">Promedios PT (Regular)</h3>
+            <canvas id="graficaLlegadasPT" height="100"></canvas>
+            
+            <div style="margin: 30px 0;"></div>
+            
+            <h3 style="color: var(--pt-pax);">Promedios PT PAX</h3>
+            <canvas id="graficaLlegadasPAX" height="100"></canvas>
+
+            <div style="margin: 40px 0; border-top: 2px dashed #ddd;"></div>
+
+            <h2>Estadísticas de Movimientos y Top Productos</h2>
+            <div class="form-row" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
+                <div class="form-col">
+                    <label>Filtrar por Estado:</label>
+                    <select id="filtro-inc-estado" onchange="renderStatsIncidencias()">
+                        <option value="TODOS">Todos</option>
+                        <option value="FALTÓ">Faltó en ruta</option>
+                        <option value="LLEGÓ DE MÁS">Llegó de más</option>
+                        <option value="SE REGRESÓ">Se regresó a planta</option>
+                    </select>
+                </div>
+                <div class="form-col">
+                    <label>Filtrar por Sucursal/Zona:</label>
+                    <select id="filtro-inc-sucursal" onchange="renderStatsIncidencias()">
+                        <option value="TODAS">Todas las Sucursales</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-row">
                 <div class="form-col">
-                    <h3>Promedio de Llegada (PT)</h3>
-                    <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
-                        <table id="tabla-promedios-pt">
-                            <thead><tr><th>Sucursal</th><th>Supervisor</th><th>Hora Promedio</th></tr></thead>
+                    <div class="top-card">
+                        <h4>Impacto Total (PT)</h4>
+                        <p id="total-dinero-pt">$0.00</p>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="top-card">
+                        <h4>Impacto Total (PT PAX)</h4>
+                        <p id="total-dinero-pax" style="color: var(--pt-pax);">$0.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <h3>Top Productos Afectados (Por Cantidad)</h3>
+                    <div class="table-responsive">
+                        <table id="tabla-top-productos">
+                            <thead><tr><th>Producto</th><th>Cantidad</th><th>Valor Total ($)</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
                 </div>
-                <div class="form-col">
-                    <h3>Alertas: Vueltas PT No Reportadas</h3>
-                    <p style="font-size: 13px; color: #666;">Días donde no hay registro PT (1ra vuelta).</p>
-                    <div id="lista-faltantes" style="max-height: 350px; overflow-y: auto; padding-right: 10px;"></div>
-                </div>
             </div>
-            <div style="margin-top: 30px;">
-                <canvas id="graficaLlegadasPT" height="100"></canvas>
-            </div>
-
-            <div class="stats-divider"></div>
-
-            <!-- SECCIÓN PT PAX -->
-            <h2 style="color: var(--pt-pax);">Estadísticas PT PAX</h2>
-            <p style="font-size: 14px; color: #666;">El PT PAX no requiere alertas de falta diaria, solo promedios de tiempo de los días que sí llega.</p>
-            <div class="form-row">
-                <div class="form-col">
-                    <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
-                        <table id="tabla-promedios-pax">
-                            <thead style="background: var(--pt-pax);"><tr><th style="background: var(--pt-pax);">Sucursal</th><th style="background: var(--pt-pax);">Supervisor</th><th style="background: var(--pt-pax);">Hora Promedio (PAX)</th></tr></thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div style="margin-top: 30px;">
-                <canvas id="graficaLlegadasPAX" height="100"></canvas>
-            </div>
-
         </div>
+
+        <div id="Historial" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Historial Global</h2>
+                <div>
+                    <label style="display:inline-block; margin-right:10px;">Mes:</label>
+                    <input type="month" id="filtro-mes-historial" onchange="renderHistorial()" style="width: auto; padding: 5px;">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="tabla-historial">
+                    <thead>
+                        <tr><th>Fecha</th><th>Sucursal</th><th>Almacén</th><th>Llegada</th><th>Salida</th><th>Vuelta</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // ==========================================
-        // 1. PEGA TU URL DE GOOGLE APPS SCRIPT AQUÍ
-        // ==========================================
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2hDk5_MMfBCSNiDr1IosciHfEztGR0-cNpeMXKWNfQfAGFwtd_KTgn4DiOCxTBtB8/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwWO3o4eQTH8_xTh-w4IM2Bn3IWd1ZC15kRPHAwR7ca8eUMusbUfz3En0hG6_qZe5A/exec"; 
         
-        // Base de datos de sucursales con supervisores
-        let sucursales = [
-            { id: "ACA", name: "AVILA CAMACHO", supervisor: "ADRIANA" },
-            { id: "IND", name: "INDEPENDENCIA", supervisor: "ADRIANA" },
-            { id: "RCE", name: "REAL CENTER", supervisor: "ADRIANA" },
-            { id: "SIS", name: "SAN ISIDRO", supervisor: "ADRIANA" },
-            { id: "TES", name: "TESISTAN", supervisor: "ADRIANA" },
-            { id: "TET", name: "TETLAN", supervisor: "ADRIANA" },
-            { id: "TRA", name: "TRANSITO", supervisor: "ADRIANA" },
-            { id: "SLU", name: "SANTA LUCIA", supervisor: "ADRIANA" },
-            { id: "AME", name: "AMERICAS", supervisor: "CITLALLI" },
-            { id: "CHA", name: "CHAPULTEPEC", supervisor: "CITLALLI" },
-            { id: "FED", name: "FEDERALTA", supervisor: "CITLALLI" },
-            { id: "LPA", name: "LA PAZ", supervisor: "CITLALLI" },
-            { id: "OBL", name: "OBLATOS", supervisor: "CITLALLI" },
-            { id: "POR", name: "PUNTO ORIENTE", supervisor: "CITLALLI" },
-            { id: "REV", name: "REVOLUCION", supervisor: "CITLALLI" },
-            { id: "TEC", name: "TECHNOLOGY", supervisor: "CITLALLI" },
-            { id: "ALC", name: "ALCALDE", supervisor: "KARLA" },
-            { id: "COL", name: "COLON", supervisor: "KARLA" },
-            { id: "EIG", name: "EXPENDIO INGLATERRA", supervisor: "KARLA" },
-            { id: "ETE", name: "EXPENDIO TEPEYAC", supervisor: "KARLA" },
-            { id: "GCO", name: "GOLFO DE CORTES", supervisor: "KARLA" },
-            { id: "GUA", name: "GUADALUPE", supervisor: "KARLA" },
-            { id: "ING", name: "INGLATERRA", supervisor: "KARLA" },
-            { id: "JUA", name: "JUAREZ", supervisor: "KARLA" },
-            { id: "NOB", name: "NIÑO OBRERO", supervisor: "KARLA" },
-            { id: "AER", name: "AEROPUERTO", supervisor: "LEONARDO" },
-            { id: "ALT", name: "ALTEA", supervisor: "LEONARDO" },
-            { id: "CPI", name: "CENTRO LAS PINTAS", supervisor: "LEONARDO" },
-            { id: "COC", name: "CONCEPCION", supervisor: "LEONARDO" },
-            { id: "RMI", name: "R MICHEL", supervisor: "LEONARDO" },
-            { id: "RPL", name: "RIO PLAZA", supervisor: "LEONARDO" },
-            { id: "SFE", name: "SANTA FE", supervisor: "LEONARDO" },
-            { id: "TLA", name: "TLAQUEPAQUE", supervisor: "LEONARDO" },
-            { id: "TON", name: "TONALA", supervisor: "LEONARDO" },
-            { id: "BUG", name: "BUGAMBILIAS", supervisor: "NOEMI" },
-            { id: "CRE", name: "CAMINO REAL", supervisor: "NOEMI" },
-            { id: "CGR", name: "CIUDAD GRANJA", supervisor: "NOEMI" },
-            { id: "GAL", name: "GALERIAS", supervisor: "NOEMI" },
-            { id: "HIS", name: "HISTORIADORES", supervisor: "NOEMI" },
-            { id: "LCA", name: "LA CALMA", supervisor: "NOEMI" },
-            { id: "LPL", name: "LAPISLAZULI", supervisor: "NOEMI" },
-            { id: "MOT", name: "MARIANO OTERO", supervisor: "NOEMI" },
+        const sucursales = [
+            { id: "ACA", name: "AVILA CAMACHO", supervisor: "ADRIANA" }, { id: "IND", name: "INDEPENDENCIA", supervisor: "ADRIANA" },
+            { id: "RCE", name: "REAL CENTER", supervisor: "ADRIANA" }, { id: "SIS", name: "SAN ISIDRO", supervisor: "ADRIANA" },
+            { id: "TES", name: "TESISTAN", supervisor: "ADRIANA" }, { id: "TET", name: "TETLAN", supervisor: "ADRIANA" },
+            { id: "TRA", name: "TRANSITO", supervisor: "ADRIANA" }, { id: "SLU", name: "SANTA LUCIA", supervisor: "ADRIANA" },
+            { id: "AME", name: "AMERICAS", supervisor: "CITLALLI" }, { id: "CHA", name: "CHAPULTEPEC", supervisor: "CITLALLI" },
+            { id: "FED", name: "FEDERALTA", supervisor: "CITLALLI" }, { id: "LPA", name: "LA PAZ", supervisor: "CITLALLI" },
+            { id: "OBL", name: "OBLATOS", supervisor: "CITLALLI" }, { id: "POR", name: "PUNTO ORIENTE", supervisor: "CITLALLI" },
+            { id: "REV", name: "REVOLUCION", supervisor: "CITLALLI" }, { id: "TEC", name: "TECHNOLOGY", supervisor: "CITLALLI" },
+            { id: "ALC", name: "ALCALDE", supervisor: "KARLA" }, { id: "COL", name: "COLON", supervisor: "KARLA" },
+            { id: "EIG", name: "EXPENDIO INGLATERRA", supervisor: "KARLA" }, { id: "ETE", name: "EXPENDIO TEPEYAC", supervisor: "KARLA" },
+            { id: "GCO", name: "GOLFO DE CORTES", supervisor: "KARLA" }, { id: "GUA", name: "GUADALUPE", supervisor: "KARLA" },
+            { id: "ING", name: "INGLATERRA", supervisor: "KARLA" }, { id: "JUA", name: "JUAREZ", supervisor: "KARLA" },
+            { id: "NOB", name: "NIÑO OBRERO", supervisor: "KARLA" }, { id: "AER", name: "AEROPUERTO", supervisor: "LEONARDO" },
+            { id: "ALT", name: "ALTEA", supervisor: "LEONARDO" }, { id: "CPI", name: "CENTRO LAS PINTAS", supervisor: "LEONARDO" },
+            { id: "COC", name: "CONCEPCION", supervisor: "LEONARDO" }, { id: "RMI", name: "R MICHEL", supervisor: "LEONARDO" },
+            { id: "RPL", name: "RIO PLAZA", supervisor: "LEONARDO" }, { id: "SFE", name: "SANTA FE", supervisor: "LEONARDO" },
+            { id: "TLA", name: "TLAQUEPAQUE", supervisor: "LEONARDO" }, { id: "TON", name: "TONALA", supervisor: "LEONARDO" },
+            { id: "BUG", name: "BUGAMBILIAS", supervisor: "NOEMI" }, { id: "CRE", name: "CAMINO REAL", supervisor: "NOEMI" },
+            { id: "CGR", name: "CIUDAD GRANJA", supervisor: "NOEMI" }, { id: "GAL", name: "GALERIAS", supervisor: "NOEMI" },
+            { id: "HIS", name: "HISTORIADORES", supervisor: "NOEMI" }, { id: "LCA", name: "LA CALMA", supervisor: "NOEMI" },
+            { id: "LPL", name: "LAPISLAZULI", supervisor: "NOEMI" }, { id: "MOT", name: "MARIANO OTERO", supervisor: "NOEMI" },
             { id: "PSO", name: "PLAZA DEL SOL", supervisor: "NOEMI" }
-        ];
+        ].sort((a, b) => a.name.localeCompare(b.name));
 
-        // Ordenar alfabéticamente por el NOMBRE de la sucursal
-        sucursales.sort((a, b) => a.name.localeCompare(b.name));
+        const productosDB = [
+            {tipo: "PT PAX", nombre: "BOLIS CAPUCCINO", precio: 60}, {tipo: "PT PAX", nombre: "BOLIS MANGO", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLIS CHAI", precio: 60}, {tipo: "PT PAX", nombre: "BOLIS CHOCOLATE", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLIS FRESA", precio: 60}, {tipo: "PT PAX", nombre: "BOLIS TARO", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLIS VAINILLA", precio: 60}, {tipo: "PT PAX", nombre: "BOLO GALLETA NAV", precio: 105},
+            {tipo: "PT PAX", nombre: "BOTE HELADO ALMENDRA", precio: 125}, {tipo: "PT PAX", nombre: "BOTE HELADO CARAMEL BROWNIE AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO CARAMELO SALADO AMORIPAX", precio: 125}, {tipo: "PT PAX", nombre: "BOTE HELADO CHOCOLATE AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO CHOCOLOCO AMORIPAX", precio: 125}, {tipo: "PT PAX", nombre: "BOTE HELADO FRESA AGUA AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO FRESA AMORIPAX", precio: 125}, {tipo: "PT PAX", nombre: "BOTE HELADO FRESA FIT AMORIPAX", precio: 250},
+            {tipo: "PT PAX", nombre: "BOTE HELADO GALLETA LOTUS AMORIPAX", precio: 125}, {tipo: "PT PAX", nombre: "BOTE HELADO MAGIA DE YOGURT AMORIPAX", precio: 250},
+            {tipo: "PT PAX", nombre: "BOTE HELADO MONKEY BANANA AMORIPAX", precio: 125}, {tipo: "PT PAX", nombre: "BOTE HELADO NONNA TERESA AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO NUEX AMORIPAX", precio: 125}, {tipo: "PT PAX", nombre: "BOTE HELADO OREO LOVERS AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO TIRAMISU AMORIPAX", precio: 125}, {tipo: "PT PAX", nombre: "BOTE HELADO VAINILLA AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "PASTEL HELADO CHOCOAVELLANA AMORIPAX", precio: 455}, {tipo: "PT PAX", nombre: "PASTEL HELADO OREO AMORIPAX", precio: 440},
+            {tipo: "PT PAX", nombre: "PASTEL HELADO PARTY CAKE AMORIPAX", precio: 440}, {tipo: "PT PAX", nombre: "PORCION HELADO CARAMEL BROWNIE AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO CARAMELO SALADO AMORIPAX", precio: 47}, {tipo: "PT PAX", nombre: "PORCION HELADO CHOCO LOCO AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO CHOCOLATE AMORIPAX", precio: 47}, {tipo: "PT PAX", nombre: "PORCION HELADO FRESA AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO FRESA FIT AMORIPAX", precio: 90}, {tipo: "PT PAX", nombre: "PORCION HELADO GALLETA LOTUS", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO JHON LEMON AMORIPAX", precio: 47}, {tipo: "PT PAX", nombre: "PORCION HELADO MAGIA DE YOGHURT AMORIPAX", precio: 90},
+            {tipo: "PT PAX", nombre: "PORCION HELADO MAZAPAX AMORIPAX", precio: 47}, {tipo: "PT PAX", nombre: "PORCION HELADO MONKEY BANANA AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO NUEX AMORIPAX", precio: 47}, {tipo: "PT PAX", nombre: "PORCION HELADO OREO LOVERS AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO PISTACHE AMORIPAX", precio: 47}, {tipo: "PT PAX", nombre: "PORCION HELADO TIRAMISU AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO VAINILLA  AMORIPAX", precio: 47},
+            {tipo: "PT", nombre: "SMOOTHIE CHAI DESLACTOSADO", precio: 60}, {tipo: "PT", nombre: "SMOOTHIE CHOCOLATE DESLACTOSADO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE CHAI ENTERO", precio: 60}, {tipo: "PT", nombre: "SMOOTHIE CHOCOLATE ENTERO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE CHAI LIGHT", precio: 60}, {tipo: "PT", nombre: "SMOOTHIE CHOCOLATE LIGHT", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE FRESA DESLACTOSADO", precio: 60}, {tipo: "PT", nombre: "SMOOTHIE FRESA ENTERO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE FRESA LIGHT", precio: 60}, {tipo: "PT", nombre: "SMOOTHIE TARO DESLACTOSADO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE TARO ENTERO", precio: 60}, {tipo: "PT", nombre: "SMOOTHIE TARO LIGHT", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE VAINILLA DESLACTOSADO", precio: 60}, {tipo: "PT", nombre: "SMOOTHIE VAINILLA ENTERO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE VAINILLA LIGHT", precio: 60}, {tipo: "PT", nombre: "CAPUCCINO DESLACTOSADO", precio: 60},
+            {tipo: "PT", nombre: "CAPUCCINO ENTERO", precio: 60}, {tipo: "PT", nombre: "CAPUCCINO LIGHT", precio: 60},
+            {tipo: "PT", nombre: "BROWNIE CHOCOLATE", precio: 40}, {tipo: "PT", nombre: "BROWNIE CHOCORROCAS", precio: 40},
+            {tipo: "PT", nombre: "BROWNIE PHILADELPHIA", precio: 40}, {tipo: "PT", nombre: "CAJA BROWNIE SURTIDO", precio: 99},
+            {tipo: "PT", nombre: "CAJA GALLETA ARANDANO Y AVENA", precio: 100}, {tipo: "PT", nombre: "CAJA GALLETA CAJETA Y COCO 8P", precio: 115},
+            {tipo: "PT", nombre: "CAJA GALLETA CHOCOLATE CORAZON", precio: 136}, {tipo: "PT", nombre: "CAJA GALLETA FRESA", precio: 105},
+            {tipo: "PT", nombre: "CAJA TRUFFELD CON LICOR", precio: 155}, {tipo: "PT", nombre: "CAJA TRUFFELD SIN LICOR", precio: 155},
+            {tipo: "PT", nombre: "CHEESECAKE FRUTOS ROJOS CHICO", precio: 500}, {tipo: "PT", nombre: "CHEESECAKE MANZANA GRANDE", precio: 650},
+            {tipo: "PT", nombre: "FLAN NAPOLITANO", precio: 380}, {tipo: "PT", nombre: "GELATINA FRUTOS ROJOS", precio: 365},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES CHOCOLATE", precio: 470}, {tipo: "PT", nombre: "PASTEL CHOCOLATE", precio: 460},
+            {tipo: "PT", nombre: "PASTEL ZANAHORIA", precio: 490}, {tipo: "PT", nombre: "REBANADA CHEESE CAKE FRUTOS ROJOS", precio: 75}
+        ].sort((a,b) => a.nombre.localeCompare(b.nombre));
 
         let registros = [];
+        let incidenciasLocales = []; 
         let chartPT = null;
         let chartPAX = null;
+        let ordenPromediosAsc = true; // Controla el nuevo orden general
 
         const loader = document.getElementById('loader');
         const fechaInput = document.getElementById('fechaRegistro');
 
         const getHoyStr = () => {
-            const d = new Date();
-            return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
+            const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
         };
 
         function openTab(evt, tabName) {
@@ -335,246 +398,279 @@
             evt.currentTarget.classList.add("active");
 
             if(tabName === 'Historial') renderHistorial();
-            if(tabName === 'Estadisticas') generarEstadisticas();
+            if(tabName === 'Estadisticas') { actualizarEstadisticasGlobales(); }
+        }
+
+        // Función unificadora para refrescar todo en la pestaña estadísticas con los filtros superiores
+        function actualizarEstadisticasGlobales() {
+            generarEstadisticas(); 
+            renderStatsIncidencias();
         }
 
         window.onload = function() {
-            fechaInput.value = getHoyStr();
-            fechaInput.addEventListener('change', actualizarCuadricula);
-
-            const select = document.getElementById("sucursal");
-            const grid = document.getElementById("sucursales-grid");
-
-            // Rellenar select y cuadrícula (ahora ya están ordenadas alfabéticamente)
-            sucursales.forEach(suc => {
-                let opt = document.createElement("option"); opt.value = suc.id; opt.innerText = `${suc.id} - ${suc.name}`; select.appendChild(opt);
-                let div = document.createElement("div"); div.id = "grid-" + suc.id; div.className = "grid-item"; div.innerText = suc.id; div.title = suc.name; grid.appendChild(div);
-            });
+            const hoy = getHoyStr();
+            fechaInput.value = hoy;
+            fechaInput.addEventListener('change', () => actualizarCuadricula());
 
             const d = new Date();
-            document.getElementById("mes-stats").value = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0');
+            const mesActual = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0');
+            // Inicializamos el nuevo filtro global y el historial
+            document.getElementById("filtro-mes-global").value = mesActual;
+            document.getElementById("filtro-mes-historial").value = mesActual;
+
+            const selectSucursal = document.getElementById("sucursal");
+            const incSucursal = document.getElementById("inc-sucursal");
+            const filtroIncSucursal = document.getElementById("filtro-inc-sucursal");
+            const grid = document.getElementById("sucursales-grid");
+
+            sucursales.forEach(suc => {
+                let optStr = `<option value="${suc.id}">${suc.id} - ${suc.name}</option>`;
+                selectSucursal.innerHTML += optStr;
+                incSucursal.innerHTML += optStr;
+                filtroIncSucursal.innerHTML += optStr;
+                
+                let div = document.createElement("div"); div.id = "grid-" + suc.id; div.className = "grid-item"; div.innerText = suc.id; div.title = suc.name;
+                grid.appendChild(div);
+            });
+
+            cargarProductosDropdown();
             fetchRegistros();
         };
 
         function fetchRegistros() {
-            if(SCRIPT_URL === "AQUI_PEGA_TU_URL") {
-                alert("Modo local (Sin Google Sheets configurado).");
-                return;
-            }
+            if(!SCRIPT_URL || SCRIPT_URL === "AQUI_PEGA_TU_URL") return;
+            
             loader.style.display = 'flex';
             fetch(SCRIPT_URL)
                 .then(res => res.json())
                 .then(data => {
-                    registros = data;
+                    registros = data.vueltas.map(r => ({ ...r, fecha: r.fecha ? r.fecha.toString().substring(0, 10) : '' }));
+                    incidenciasLocales = data.incidencias || [];
+                    
                     actualizarCuadricula();
+                    actualizarEstadisticasGlobales();
                     loader.style.display = 'none';
                 })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("Error cargando base de datos.");
-                    loader.style.display = 'none';
-                });
+                .catch(err => { alert("Error cargando DB."); loader.style.display = 'none'; });
         }
 
         function actualizarCuadricula() {
             const fechaSeleccionada = fechaInput.value;
-            const registrosDia = registros.filter(r => r.fecha === fechaSeleccionada && !r.esSegundaVuelta && r.tipoProducto === "PT");
-            const sucursalesRegistradas = new Set(registrosDia.map(r => r.sucursal));
+            const sucursalesRegistradas = new Set(registros.filter(r => r.fecha === fechaSeleccionada && !r.esSegundaVuelta && r.tipoProducto === "PT").map(r => r.sucursal));
 
             sucursales.forEach(suc => {
                 const el = document.getElementById("grid-" + suc.id);
-                if(sucursalesRegistradas.has(suc.id)) {
-                    el.classList.add("registrada");
-                } else {
-                    el.classList.remove("registrada");
-                }
+                sucursalesRegistradas.has(suc.id) ? el.classList.add("registrada") : el.classList.remove("registrada");
             });
         }
 
+        // --- ENVÍO DE FORMULARIO VUELTAS ---
         document.getElementById("registro-form").addEventListener("submit", function(e) {
             e.preventDefault();
-            
             const tipoSeleccionado = document.querySelector('input[name="tipoProducto"]:checked').value;
-
             const nuevoRegistro = {
-                fecha: document.getElementById("fechaRegistro").value,
-                sucursal: document.getElementById("sucursal").value,
-                tipoProducto: tipoSeleccionado,
-                horaLlegada: document.getElementById("horaLlegada").value,
-                horaSalida: document.getElementById("horaSalida").value,
-                chofer: document.getElementById("chofer").value,
-                recibe: document.getElementById("recibe").value,
-                esSegundaVuelta: document.getElementById("segundaVuelta").checked
+                fecha: document.getElementById("fechaRegistro").value, sucursal: document.getElementById("sucursal").value, tipoProducto: tipoSeleccionado,
+                horaLlegada: document.getElementById("horaLlegada").value, horaSalida: document.getElementById("horaSalida").value,
+                chofer: document.getElementById("chofer").value, recibe: document.getElementById("recibe").value, esSegundaVuelta: document.getElementById("segundaVuelta").checked
             };
-
-            if(SCRIPT_URL === "AQUI_PEGA_TU_URL") {
-                registros.push(nuevoRegistro);
-                actualizarCuadricula();
-                this.reset();
-                alert("Guardado en simulación local.");
-                return;
-            }
 
             loader.style.display = 'flex';
             fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(nuevoRegistro) })
             .then(res => res.json())
             .then(response => {
-                if(response.status === "exito") {
-                    registros.push(nuevoRegistro);
-                    actualizarCuadricula();
-                    const currentFecha = document.getElementById("fechaRegistro").value;
-                    this.reset();
-                    document.getElementById("fechaRegistro").value = currentFecha;
-                    document.querySelector(`input[name="tipoProducto"][value="${tipoSeleccionado}"]`).checked = true;
-                    alert("Registro guardado exitosamente.");
+                registros.push(nuevoRegistro); 
+                actualizarCuadricula(); 
+                actualizarEstadisticasGlobales();
+                const d = document.getElementById("fechaRegistro").value; 
+                this.reset(); 
+                document.getElementById("fechaRegistro").value = d;
+            })
+            .catch(error => { alert("Hubo un error al guardar el registro."); })
+            .finally(() => loader.style.display = 'none');
+        });
+
+        // --- MÓDULO INCIDENCIAS (PRODUCTOS) ---
+        function cargarProductosDropdown() {
+            const tipo = document.getElementById("inc-tipo").value;
+            const selectProd = document.getElementById("inc-producto");
+            selectProd.innerHTML = "<option value=''>-- Elige Producto --</option>";
+            productosDB.filter(p => p.tipo === tipo).forEach(p => { selectProd.innerHTML += `<option value="${p.nombre}">${p.nombre} ($${p.precio})</option>`; });
+        }
+
+        document.getElementById("incidencias-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const productoNombre = document.getElementById("inc-producto").value;
+            const prodObj = productosDB.find(p => p.nombre === productoNombre);
+            
+            const nuevaInc = {
+                tipoRegistro: "INCIDENCIA", 
+                sucursal: document.getElementById("inc-sucursal").value,
+                tipo: document.getElementById("inc-tipo").value,
+                producto: productoNombre,
+                precio: prodObj.precio,
+                cantidad: parseInt(document.getElementById("inc-cantidad").value),
+                estado: document.getElementById("inc-estado").value
+            };
+            
+            loader.style.display = 'flex';
+            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(nuevaInc) })
+            .then(res => res.json())
+            .then(response => {
+                if(response.status === "exito"){
+                    nuevaInc.fecha = getHoyStr(); 
+                    incidenciasLocales.push(nuevaInc);
+                    this.reset(); 
+                    document.getElementById("inc-tipo").value="PT"; 
+                    cargarProductosDropdown();
+                    renderStatsIncidencias();
                 } else {
                     alert("Error: " + response.mensaje);
                 }
             })
-            .catch(error => { console.error(error); })
-            .finally(() => { loader.style.display = 'none'; });
+            .catch(error => { console.error(error); alert("Hubo un error de conexión al guardar el movimiento."); })
+            .finally(() => loader.style.display = 'none');
         });
 
-        function renderHistorial() {
-            const tbody = document.querySelector("#tabla-historial tbody");
-            tbody.innerHTML = "";
-            const regsReversed = [...registros].reverse();
-            regsReversed.forEach(r => {
-                const tr = document.createElement("tr");
-                const badgeClass = r.tipoProducto === 'PT PAX' ? 'badge pax' : 'badge pt';
-                const tipoTexto = r.tipoProducto || 'PT';
-                const vueltaBadge = r.esSegundaVuelta ? `<span class="badge vuelta2">2da Vuelta</span>` : `1ra Vuelta`;
+        // --- ESTADÍSTICAS INCIDENCIAS ---
+        function renderStatsIncidencias() {
+            const mes = document.getElementById("filtro-mes-global").value;
+            const filtroEdo = document.getElementById("filtro-inc-estado").value;
+            const filtroSuc = document.getElementById("filtro-inc-sucursal").value;
+            
+            let dataList = incidenciasLocales;
+            
+            if(mes) {
+                dataList = dataList.filter(i => i.fecha && i.fecha.substring(0,7) === mes);
+            }
+            
+            if(filtroEdo !== "TODOS") dataList = dataList.filter(i => i.estado === filtroEdo);
+            if(filtroSuc !== "TODAS") dataList = dataList.filter(i => i.sucursal === filtroSuc);
 
-                tr.innerHTML = `
-                    <td>${r.fecha}</td>
-                    <td><b>${r.sucursal}</b></td>
-                    <td><span class="${badgeClass}">${tipoTexto}</span></td>
-                    <td>${r.horaLlegada}</td>
-                    <td>${r.horaSalida}</td>
-                    <td>${r.chofer}</td>
-                    <td>${r.recibe}</td>
-                    <td>${vueltaBadge}</td>
-                `;
-                tbody.appendChild(tr);
+            let totalPT = 0, totalPAX = 0;
+            let conteoProd = {};
+
+            dataList.forEach(inc => {
+                let valor = inc.cantidad * inc.precio;
+                if(inc.tipo === "PT PAX") totalPAX += valor; else totalPT += valor;
+                
+                if(!conteoProd[inc.producto]) conteoProd[inc.producto] = { cant: 0, valor: 0 };
+                conteoProd[inc.producto].cant += inc.cantidad;
+                conteoProd[inc.producto].valor += valor;
+            });
+
+            document.getElementById("total-dinero-pt").innerText = "$" + totalPT.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById("total-dinero-pax").innerText = "$" + totalPAX.toLocaleString('es-MX', {minimumFractionDigits: 2});
+
+            let topArr = Object.keys(conteoProd).map(k => ({ nombre: k, cant: conteoProd[k].cant, valor: conteoProd[k].valor }));
+            topArr.sort((a,b) => b.cant - a.cant);
+
+            const tbody = document.querySelector("#tabla-top-productos tbody");
+            tbody.innerHTML = "";
+            topArr.slice(0,10).forEach(p => {
+                tbody.innerHTML += `<tr><td>${p.nombre}</td><td><b>${p.cant}</b></td><td class="money">$${p.valor.toLocaleString('es-MX')}</td></tr>`;
             });
         }
 
-        function timeToMins(timeStr) {
-            if(!timeStr) return 0;
-            const parts = timeStr.split(':');
-            return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        function timeToMins(t) { if(!t) return 0; const p = t.split(':'); return parseInt(p[0])*60 + parseInt(p[1]); }
+        function minsToTime(m) { const h = Math.floor(m/60); const min = Math.floor(m%60); return String(h).padStart(2,'0')+":"+String(min).padStart(2,'0'); }
+
+        function renderHistorial() {
+            const mes = document.getElementById("filtro-mes-historial").value;
+            const tbody = document.querySelector("#tabla-historial tbody");
+            tbody.innerHTML = "";
+            
+            [...registros].reverse()
+                .filter(r => !mes || (r.fecha && r.fecha.substring(0,7) === mes))
+                .forEach(r => {
+                    let bClass = r.tipoProducto === 'PT PAX' ? 'badge pax' : 'badge pt';
+                    tbody.innerHTML += `<tr><td>${r.fecha}</td><td><b>${r.sucursal}</b></td><td><span class="${bClass}">${r.tipoProducto||'PT'}</span></td><td>${r.horaLlegada}</td><td>${r.horaSalida}</td><td>${r.esSegundaVuelta?'2da':'1ra'}</td></tr>`;
+            });
         }
-        function minsToTime(mins) {
-            const h = Math.floor(mins / 60); const m = Math.floor(mins % 60);
-            return String(h).padStart(2, '0') + ":" + String(m).padStart(2, '0');
+
+        // --- ANÁLISIS DE TIEMPOS Y ORDENAMIENTO ---
+        function toggleOrdenPromedios() { 
+            ordenPromediosAsc = !ordenPromediosAsc; 
+            generarEstadisticas(); 
         }
 
         function generarEstadisticas() {
-            const mesSeleccionado = document.getElementById("mes-stats").value; 
-            const supervisorFiltro = document.getElementById("supervisor-stats").value;
-            if(!mesSeleccionado) return;
+            const mes = document.getElementById("filtro-mes-global").value; 
+            const sup = document.getElementById("filtro-sup-global").value;
+            if(!mes) return;
 
-            // Filtramos las sucursales según el supervisor seleccionado
-            const sucursalesFiltradas = supervisorFiltro === "TODOS" 
-                ? sucursales 
-                : sucursales.filter(s => s.supervisor === supervisorFiltro);
+            let sucFiltradas = sup === "TODOS" ? sucursales.slice() : sucursales.filter(s => s.supervisor === sup).slice();
+            const regs = registros.filter(r => r.fecha && r.fecha.substring(0,7) === mes && !r.esSegundaVuelta);
 
-            // Filtramos 1ras vueltas del mes seleccionado
-            const regMesValidos = registros.filter(r => r.fecha && r.fecha.substring(0,7) === mesSeleccionado && !r.esSegundaVuelta);
+            // Primero calculamos los promedios de todas las sucursales filtradas
+            let datosSucursales = sucFiltradas.map(s => {
+                const regsPT = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT" && r.horaLlegada);
+                const regsPAX = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT PAX" && r.horaLlegada);
 
-            // Separar PT y PT PAX
-            const regMesPT = regMesValidos.filter(r => r.tipoProducto !== "PT PAX");
-            const regMesPAX = regMesValidos.filter(r => r.tipoProducto === "PT PAX");
+                // Asignamos un valor altísimo (999999) si no tienen datos, para mandarlas al final en el ordenamiento
+                const valPT = regsPT.length > 0 ? (regsPT.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / regsPT.length) : 999999;
+                const valPAX = regsPAX.length > 0 ? (regsPAX.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / regsPAX.length) : 999999;
 
-            // PROCESAR TABLAS Y GRÁFICAS (Pasando la lista filtrada)
-            procesarDatosEstadisticas(regMesPT, sucursalesFiltradas, "tabla-promedios-pt", "graficaLlegadasPT", "PT", chartPT, (nuevoChart) => chartPT = nuevoChart);
-            procesarDatosEstadisticas(regMesPAX, sucursalesFiltradas, "tabla-promedios-pax", "graficaLlegadasPAX", "PAX", chartPAX, (nuevoChart) => chartPAX = nuevoChart);
+                return {
+                    ...s,
+                    valPT: valPT,
+                    valPAX: valPAX,
+                    promPTStr: valPT !== 999999 ? minsToTime(valPT) : "-",
+                    promPAXStr: valPAX !== 999999 ? minsToTime(valPAX) : "-"
+                };
+            });
 
-            // FALTANTES (SOLO PARA PT)
-            calcularFaltantesPT(mesSeleccionado, regMesPT, sucursalesFiltradas);
+            // Ordenamos la lista principal basada en el promedio PT
+            datosSucursales.sort((a, b) => {
+                if (a.valPT === 999999 && b.valPT === 999999) return a.id.localeCompare(b.id);
+                if (a.valPT === 999999) return 1;  // Sin datos se va siempre al fondo
+                if (b.valPT === 999999) return -1; // Sin datos se va siempre al fondo
+                return ordenPromediosAsc ? (a.valPT - b.valPT) : (b.valPT - a.valPT);
+            });
+
+            // Procesamos gráficas enviándoles el array ya ordenado
+            procesarGrafica(regs.filter(r => r.tipoProducto !== "PT PAX"), datosSucursales, "graficaLlegadasPT", "PT", chartPT, (c) => chartPT = c);
+            procesarGrafica(regs.filter(r => r.tipoProducto === "PT PAX"), datosSucursales, "graficaLlegadasPAX", "PAX", chartPAX, (c) => chartPAX = c);
+
+            // Renderizamos la tabla superior usando el mismo array ordenado
+            const tbodyProm = document.querySelector("#tabla-promedios-llegada tbody");
+            tbodyProm.innerHTML = "";
+            
+            datosSucursales.forEach(s => {
+                tbodyProm.innerHTML += `<tr><td><b>${s.id}</b></td><td>${s.promPTStr}</td><td>${s.promPAXStr}</td></tr>`;
+            });
         }
 
-        function procesarDatosEstadisticas(registrosDatos, sucursalesList, idTabla, idCanvas, tipo, chartRef, updateChartRef) {
-            const stats = {};
-            sucursalesList.forEach(s => stats[s.id] = { totalMins: 0, count: 0 });
-
-            registrosDatos.forEach(r => {
-                if(stats[r.sucursal] && r.horaLlegada) {
-                    stats[r.sucursal].totalMins += timeToMins(r.horaLlegada);
-                    stats[r.sucursal].count++;
-                }
-            });
-
-            const tbody = document.querySelector(`#${idTabla} tbody`);
-            tbody.innerHTML = "";
-            let labelsChart = [];
-            let dataChart = [];
-
-            sucursalesList.forEach(s => {
-                const row = document.createElement("tr");
-                let timeTxt = '<span style="color:#999">Sin datos</span>';
-                if(stats[s.id].count > 0) {
-                    const prom = stats[s.id].totalMins / stats[s.id].count;
-                    timeTxt = `<b>${minsToTime(prom)}</b>`;
-                    labelsChart.push(s.id);
-                    dataChart.push((prom / 60).toFixed(2));
-                }
-                row.innerHTML = `<td>${s.id} - ${s.name}</td><td>${s.supervisor}</td><td>${timeTxt}</td>`;
-                tbody.appendChild(row);
-            });
-
-            const colorBg = tipo === "PAX" ? '#FF203B' : '#8BC34A';
-            const colorBorder = tipo === "PAX" ? '#B30018' : '#00763A';
+        function procesarGrafica(datos, sucursalesList, idCanvas, tipo, chartRef, updateChartRef) {
+            let labelsChart = [], dataChart = [];
             
+            sucursalesList.forEach(s => {
+                let regsSuc = datos.filter(r => r.sucursal === s.id && r.horaLlegada);
+                if(regsSuc.length > 0) {
+                    let promMins = regsSuc.reduce((acc, r) => acc + timeToMins(r.horaLlegada), 0) / regsSuc.length;
+                    labelsChart.push(s.id);
+                    dataChart.push(promMins / 60); 
+                }
+            });
+
+            const colorBg = tipo === "PAX" ? '#FF203B' : '#00763A';
             const ctx = document.getElementById(idCanvas).getContext('2d');
             if(chartRef) chartRef.destroy();
-            const nuevoGrafico = new Chart(ctx, {
+            
+            let nuevoGrafico = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: labelsChart,
-                    datasets: [{ label: `Hora Promedio ${tipo} (ej. 8.5 = 8:30)`, data: dataChart, backgroundColor: colorBg, borderColor: colorBorder, borderWidth: 2, borderRadius: 4 }]
-                },
-                options: { responsive: true, scales: { y: { beginAtZero: false, min: 5 } } }
+                data: { labels: labelsChart, datasets: [{ label: `Llegada Promedio (${tipo})`, data: dataChart, backgroundColor: colorBg, borderRadius: 4 }] },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false, min: 5,
+                            ticks: { callback: function(value) { return minsToTime(value * 60); } }
+                        }
+                    },
+                    plugins: { tooltip: { callbacks: { label: function(ctx) { return "Llegada: " + minsToTime(ctx.raw * 60); } } } }
+                }
             });
             updateChartRef(nuevoGrafico);
-        }
-
-        function calcularFaltantesPT(mesStr, regMesValidos, sucursalesList) {
-            const [year, month] = mesStr.split('-').map(Number);
-            const contenedorFaltas = document.getElementById("lista-faltantes");
-            contenedorFaltas.innerHTML = "";
-
-            const hoy = new Date();
-            const esMesActual = (hoy.getFullYear() === year && (hoy.getMonth() + 1) === month);
-            let diasEnMes = new Date(year, month, 0).getDate();
-            let ultimoDiaRevision = esMesActual ? hoy.getDate() : diasEnMes;
-            let hayFaltas = false;
-
-            for(let d = 1; d <= ultimoDiaRevision; d++) {
-                const fechaCheck = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                // Solo revisamos los registros de las sucursales que estamos filtrando
-                const regDia = regMesValidos.filter(r => r.fecha === fechaCheck).map(r => r.sucursal);
-                const setRegDia = new Set(regDia);
-
-                // Si hay al menos un registro de forma global, contamos el día como "laborado"
-                const regGlobalesDia = registros.filter(r => r.fecha === fechaCheck && r.tipoProducto === "PT");
-                
-                if(regGlobalesDia.length > 0) {
-                    let faltanHoy = [];
-                    sucursalesList.forEach(s => {
-                        if(!setRegDia.has(s.id)) faltanHoy.push(s.id);
-                    });
-
-                    if(faltanHoy.length > 0) {
-                        hayFaltas = true;
-                        const alertDiv = document.createElement("div");
-                        alertDiv.className = "alert";
-                        alertDiv.innerHTML = `<b>${fechaCheck}:</b> Faltó PT en:<br><span style="color:#d9534f">${faltanHoy.join(', ')}</span>`;
-                        contenedorFaltas.appendChild(alertDiv);
-                    }
-                }
-            }
-            if(!hayFaltas) contenedorFaltas.innerHTML = "<p style='color: green; font-weight:bold;'>¡Todo perfecto! No hay registros omitidos para este filtro.</p>";
         }
     </script>
 </body>
