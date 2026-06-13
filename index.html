@@ -732,7 +732,8 @@
             fetch(SCRIPT_URL)
                 .then(res => res.json())
                 .then(data => {
-                    registros = data.vueltas;
+                    // ESTA LÍNEA ES LA QUE ARREGLA LA CUADRÍCULA (Limpia la fecha)
+                    registros = data.vueltas.map(r => ({ ...r, fecha: r.fecha ? r.fecha.toString().substring(0, 10) : '' }));
                     incidenciasLocales = data.incidencias || [];
                     actualizarCuadricula();
                     actualizarEstadisticasGlobales();
