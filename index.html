@@ -100,7 +100,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.5</div>
+    <div class="version-tag">v1.1.6</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -324,6 +324,14 @@
                             <option value="TODAS">Todas las Sucursales</option>
                         </select>
                     </div>
+                    <div class="form-col">
+                        <label>Filtrar por Responsable:</label>
+                        <select id="filtro-inc-origen" onchange="renderStatsIncidencias()">
+                            <option value="TODOS">Todos</option>
+                            <option value="Vuelta">Vuelta (Repartidor)</option>
+                            <option value="Sucursal">Sucursal (Tienda)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-row">
@@ -343,6 +351,12 @@
 
                 <div class="form-row">
                     <div class="form-col">
+                        <div class="form-row" style="margin-top: 30px; margin-bottom: 30px;">
+                            <div class="form-col" style="width: 100%;">
+                                <h3 style="color: #E67E22; border-bottom: 2px solid #eee; padding-bottom: 10px;">Motivos de Regreso a Planta</h3>
+                                <canvas id="graficaMotivos" height="100"></canvas>
+                            </div>
+                        </div>
                         <h3>Top Productos Afectados (Por Cantidad)</h3>
                         <div class="table-responsive">
                             <table id="tabla-top-productos">
@@ -645,6 +659,7 @@
         let incidenciasLocales = []; 
         let chartPT = null;
         let chartPAX = null;
+        let chartMotivos = null;
         let ordenPromediosAsc = true; 
 
         const loader = document.getElementById('loader');
@@ -930,25 +945,65 @@
             const sem = document.getElementById("est-semana").value;
             const fEdo = document.getElementById("filtro-inc-estado").value;
             const fSuc = document.getElementById("filtro-inc-sucursal").value;
+            const fOrigen = document.getElementById("filtro-inc-origen").value; // NUEVO
             
             let arr = incidenciasLocales.filter(i => pasaFiltroTiempo(i.fecha, tipoT, mes, sem));
             if(fEdo !== "TODOS") arr = arr.filter(i => i.estado === fEdo);
             if(fSuc !== "TODAS") arr = arr.filter(i => i.sucursal === fSuc);
+            if(fOrigen !== "TODOS") arr = arr.filter(i => i.origen === fOrigen); // APLICAR NUEVO FILTRO
 
             let tPT = 0, tPAX = 0, cProd = {};
+            let countMotivos = {}; // NUEVO: Para guardar el conteo de la gráfica
+
             arr.forEach(i => {
                 let v = i.cantidad * i.precio;
                 i.tipo === "PT PAX" ? tPAX += v : tPT += v;
+                
                 if(!cProd[i.producto]) cProd[i.producto] = { cant: 0, valor: 0 };
                 cProd[i.producto].cant += i.cantidad; cProd[i.producto].valor += v;
+
+                // NUEVO: Lógica para la gráfica (solo si se regresó y tiene motivo)
+                if (i.estado === "SE REGRESÓ" && i.motivo) {
+                    if (!countMotivos[i.motivo]) countMotivos[i.motivo] = 0;
+                    countMotivos[i.motivo] += 1; // Suma 1 por cada registro (no por cantidad de producto)
+                }
             });
 
+            // Actualizar tarjetas de dinero
             document.getElementById("total-dinero-pt").innerText = "$" + tPT.toLocaleString('es-MX', {minimumFractionDigits: 2});
             document.getElementById("total-dinero-pax").innerText = "$" + tPAX.toLocaleString('es-MX', {minimumFractionDigits: 2});
 
+            // Actualizar tabla Top Productos
             let top = Object.keys(cProd).map(k => ({ nombre: k, cant: cProd[k].cant, valor: cProd[k].valor })).sort((a,b) => b.cant - a.cant);
             const tbody = document.querySelector("#tabla-top-productos tbody"); tbody.innerHTML = "";
             top.slice(0,10).forEach(p => tbody.innerHTML += `<tr><td>${p.nombre}</td><td><b>${p.cant}</b></td><td class="money">$${p.valor.toLocaleString('es-MX')}</td></tr>`);
+
+            // NUEVO: Dibujar Gráfica de Motivos
+            let labelsMotivos = Object.keys(countMotivos);
+            let dataMotivos = Object.values(countMotivos);
+            
+            const ctxMotivos = document.getElementById('graficaMotivos').getContext('2d');
+            if(chartMotivos) chartMotivos.destroy(); // Destruye la anterior para no encimarlas
+            
+            chartMotivos = new Chart(ctxMotivos, {
+                type: 'bar',
+                data: { 
+                    labels: labelsMotivos, 
+                    datasets: [{ 
+                        label: 'Frecuencia (No. de Registros)', 
+                        data: dataMotivos, 
+                        backgroundColor: '#E67E22', 
+                        borderRadius: 4 
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    scales: { 
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } },
+                        x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 } } // Rota los textos para que se lean mejor
+                    } 
+                }
+            });
         }
 
         // HISTORIAL VUELTAS
