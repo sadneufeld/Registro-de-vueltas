@@ -100,7 +100,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.9</div>
+    <div class="version-tag">v1.1.6</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -786,28 +786,19 @@
 
         function verificarEstadoMotivo() {
             const estado = document.getElementById("inc-estado").value;
-            const divMotivo = document.getElementById("div-motivo");
-            const selectMotivo = document.getElementById("inc-motivo");
-            const colOrigen = document.getElementById("col-inc-origen");
-            const divJuliano = document.getElementById("div-juliano");
-            const inputJuliano = document.getElementById("inc-juliano");
+            const colMotivo = document.getElementById("col-inc-motivo");
+            const colJuliano = document.getElementById("col-inc-juliano");
+            const colOrigen = document.getElementById("col-inc-origen"); // Nuevo contenedor
 
-            // Si seleccionan "SE REGRESÓ" (Se regresó a planta)
-            if (estado === "SE REGRESÓ") {
-                divMotivo.style.display = "flex";    // Muestra la fila del motivo
-                colOrigen.style.display = "block";   // Muestra la pregunta de ¿Dónde se originó? (Vuelta/Tienda)
-                selectMotivo.required = true;        // Hace que sea obligatorio elegir motivo
+            if (estado === "SE REGRESÓ" || estado === "SE REGRESÓ A PLANTA") {
+                if(colMotivo) colMotivo.style.display = "block";
+                if(colJuliano) colJuliano.style.display = "block";
+                if(colOrigen) colOrigen.style.display = "block"; // Se muestra si se regresa a planta
             } else {
-                // Si es "FALTÓ" o "LLEGÓ DE MÁS", ocultamos todo
-                divMotivo.style.display = "none";
-                colOrigen.style.display = "none";
-                selectMotivo.required = false;
-        
-                // Limpiamos los campos para no mandar datos fantasma a Google Sheets
-                selectMotivo.value = "";
-                document.getElementById("inc-origen").value = "En la vuelta"; 
-                if (divJuliano) divJuliano.style.display = "none";
-                if (inputJuliano) inputJuliano.value = "";
+                if(colMotivo) colMotivo.style.display = "none";
+                if(colJuliano) colJuliano.style.display = "none";
+                if(colOrigen) colOrigen.style.display = "none";
+                document.getElementById("inc-origen").value = "En la vuelta"; // Reseteo por defecto
             }
         }
 
@@ -881,41 +872,47 @@
             const mes = document.getElementById("est-mes").value;
             const sem = document.getElementById("est-semana").value;
             const sup = document.getElementById("est-sup").value;
-        
+
             let sucFilt = sup === "TODOS" ? sucursales.slice() : sucursales.filter(s => s.supervisor === sup).slice();
+            const regs = registros.filter(r => pasaFiltroTiempo(r.fecha, tipoT, mes, sem) && !r.esSegundaVuelta);
 
-            // 1. FILTRADO (El colador)
-            const regs = registros.filter(r => {
-                if (!pasaFiltroTiempo(r.fecha, tipoT, mes, sem)) return false;
-                const esSegunda = (r.esSegundaVuelta === "Sí" || r.esSegundaVuelta === true);
-                if (esSegunda) return false;
-                if (!r.horaLlegada) return false;
-                return true;
-            });
-
-            // 2. CALCULO DE DATOS (Esta es la parte que te faltaba)
             let datosSuc = sucFilt.map(s => {
-                const rPT = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT");
-                const rPAX = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT PAX");
-                
+                const rPT = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT" && r.horaLlegada);
+                const rPAX = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT PAX" && r.horaLlegada);
                 const vPT = rPT.length > 0 ? (rPT.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPT.length) : 999999;
                 const vPAX = rPAX.length > 0 ? (rPAX.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPAX.length) : 999999;
-                
-                return { 
-                    ...s, 
-                    strPT: vPT !== 999999 ? minsToTime(vPT) : "-", 
-                    strPAX: vPAX !== 999999 ? minsToTime(vPAX) : "-" 
-                };
+                return { ...s, valPT: vPT, valPAX: vPAX, strPT: vPT !== 999999 ? minsToTime(vPT) : "-", strPAX: vPAX !== 999999 ? minsToTime(vPAX) : "-" };
             });
 
-            // 3. ACTUALIZACIÓN DE GRÁFICAS
-            procesarGrafica(regs.filter(r => r.tipoProducto === "PT"), datosSuc, "graficaLlegadasPT", "PT", chartPT, (c) => chartPT = c);
-            procesarGrafica(regs.filter(r => r.tipoProducto === "PT PAX"), datosSuc, "graficaLlegadasPAX", "PAX", chartPAX, (c) => chartPAX = c);
+            datosSuc.sort((a, b) => {
+                if (a.valPT === 999999 && b.valPT === 999999) return a.id.localeCompare(b.id);
+                if (a.valPT === 999999) return 1; if (b.valPT === 999999) return -1;
+                return ordenPromediosAsc ? (a.valPT - b.valPT) : (b.valPT - a.valPT);
+            });
 
-            // 4. ACTUALIZACIÓN DE TABLA
+            procesarGrafica(regs.filter(r=>r.tipoProducto!=="PT PAX"), datosSuc, "graficaLlegadasPT", "PT", chartPT, (c)=>chartPT=c);
+            procesarGrafica(regs.filter(r=>r.tipoProducto==="PT PAX"), datosSuc, "graficaLlegadasPAX", "PAX", chartPAX, (c)=>chartPAX=c);
+
             const tbody = document.querySelector("#tabla-promedios-llegada tbody");
             tbody.innerHTML = "";
-            datosSuc.forEach(s => tbody.innerHTML += <tr><td><b>${s.id}</b></td><td>${s.strPT}</td><td>${s.strPAX}</td></tr>);
+            datosSuc.forEach(s => tbody.innerHTML += `<tr><td><b>${s.id}</b></td><td>${s.strPT}</td><td>${s.strPAX}</td></tr>`);
+        }
+
+        function procesarGrafica(datos, sucList, idCanvas, tipo, chartRef, updateChartRef) {
+            let labelsChart = [], dataChart = [];
+            sucList.forEach(s => {
+                let rSuc = datos.filter(r => r.sucursal === s.id && r.horaLlegada);
+                if(rSuc.length > 0) { labelsChart.push(s.id); dataChart.push((rSuc.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rSuc.length) / 60); }
+            });
+            const ctx = document.getElementById(idCanvas).getContext('2d');
+            if(chartRef) chartRef.destroy();
+            let c = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: labelsChart, datasets: [{ label: `Promedio (${tipo})`, data: dataChart, backgroundColor: tipo==="PAX"?'#FF203B':'#00763A', borderRadius: 4 }] },
+                options: { responsive: true, scales: { y: { beginAtZero: false, min: 5, ticks: { callback: function(v){return minsToTime(v*60);} } } },
+                           plugins: { tooltip: { callbacks: { label: function(ctx){return "Llegada: " + minsToTime(ctx.raw*60);} } } } }
+            });
+            updateChartRef(c);
         }
 
         function renderStatsIncidencias() {
