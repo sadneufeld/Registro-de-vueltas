@@ -100,7 +100,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.4</div>
+    <div class="version-tag">v1.1.5</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -232,6 +232,17 @@
                     <div class="form-col" id="div-juliano" style="display: none;">
                         <label>Número de Juliano:</label>
                         <input type="text" id="inc-juliano" placeholder="Ingresar Juliano">
+                    </div>
+                </div>
+
+                <div class="form-row" id="div-origen" style="display: none;">
+                    <div class="form-col">
+                        <label>Responsable:</label>
+                        <select id="origenIncidencia">
+                            <option value="">-- Selecciona quién fue responsable --</option>
+                            <option value="Vuelta">Vuelta (Repartidor)</option>
+                            <option value="Sucursal">Sucursal (Tienda)</option>
+                        </select>
                     </div>
                 </div>
 
@@ -779,16 +790,34 @@
 
         function verificarEstadoMotivo() {
             const estado = document.getElementById("inc-estado").value;
+            
+            // Elementos del Motivo
             const divMotivo = document.getElementById("div-motivo");
             const selMotivo = document.getElementById("inc-motivo");
             
+            // Elementos del Responsable (NUEVO)
+            const divOrigen = document.getElementById("div-origen"); 
+            const selOrigen = document.getElementById("origenIncidencia"); 
+            
             if (estado === "SE REGRESÓ") {
+                // Muestra el motivo
                 divMotivo.style.display = "flex";
                 selMotivo.required = true;
+                
+                // Muestra el responsable (NUEVO)
+                divOrigen.style.display = "flex"; 
+                selOrigen.required = true;        
             } else {
+                // Oculta el motivo
                 divMotivo.style.display = "none";
                 selMotivo.required = false;
                 selMotivo.value = "";
+                
+                // Oculta el responsable y limpia el campo (NUEVO)
+                divOrigen.style.display = "none"; 
+                selOrigen.required = false;
+                selOrigen.value = "";             
+                
                 verificarJuliano(); 
             }
         }
@@ -815,7 +844,9 @@
                 tipoRegistro: "INCIDENCIA", sucursal: document.getElementById("inc-sucursal").value, tipo: document.getElementById("inc-tipo").value,
                 producto: prodObj.nombre, precio: prodObj.precio, cantidad: parseInt(document.getElementById("inc-cantidad").value),
                 estado: document.getElementById("inc-estado").value,
-                motivo: document.getElementById("inc-motivo").value, juliano: document.getElementById("inc-juliano").value
+                motivo: document.getElementById("inc-motivo").value, 
+                juliano: document.getElementById("inc-juliano").value,
+                origen: document.getElementById("origenIncidencia").value
             };
             
             loader.style.display = 'flex';
