@@ -12,7 +12,6 @@
             --primary-dark: #005A2C;
             --primary-light: #E6F2EB;
             --pt-pax: #FF203B;
-            --pt-pax-light: #FFE8EA;
             --secondary: #8BC34A;
             --bg-body: #F4F7F6;
             --text-dark: #2C3E50;
@@ -20,19 +19,31 @@
             --border-color: #D1D9E6;
         }
 
-        body { font-family: 'Inter', sans-serif; margin: 0; padding: 20px; background-color: var(--bg-body); color: var(--text-dark); }
-        .container { max-width: 1200px; margin: 0 auto; }
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 20px; background-color: var(--bg-body); color: var(--text-dark); position: relative; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding-bottom: 50px; }
         
-        h1 { color: var(--primary); text-align: center; font-size: 2.2rem; margin-bottom: 30px; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; display: inline-block; }
+        .logo-img { position: absolute; top: 20px; left: 20px; width: 140px; }
+        .version-tag { position: fixed; bottom: 10px; left: 15px; font-size: 12px; color: #888; font-weight: bold; }
+        
+        h1 { color: var(--primary); text-align: center; font-size: 2.2rem; margin-bottom: 30px; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; display: inline-block; margin-top: 40px; }
         h2, h3 { color: var(--primary-dark); }
         
-        /* Pestañas */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .tab { padding: 12px 25px; cursor: pointer; background: var(--white); border: 1px solid var(--border-color); color: var(--text-dark); font-size: 15px; font-weight: 600; border-radius: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        /* Pestañas Principales */
+        .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .tab { padding: 12px 20px; cursor: pointer; background: var(--white); border: 1px solid var(--border-color); color: var(--text-dark); font-size: 14px; font-weight: 600; border-radius: 8px; transition: all 0.3s; }
         .tab:hover { background: var(--primary-light); }
-        .tab.active { background: var(--primary); color: var(--white); border-color: var(--primary); box-shadow: 0 4px 8px rgba(0, 118, 58, 0.3); }
+        .tab.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
         .tab-content { display: none; background: var(--white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        /* Sub-Pestañas */
+        .sub-tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); padding-bottom: 5px; }
+        .sub-tab { background: transparent; border: none; padding: 10px 20px; cursor: pointer; font-size: 15px; font-weight: 600; color: #777; border-radius: 6px 6px 0 0; transition: all 0.2s; }
+        .sub-tab:hover { color: var(--primary-dark); }
+        .sub-tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: var(--primary-light); }
+        .sub-tab-content { display: none; }
+        .sub-tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Loader */
@@ -43,65 +54,72 @@
         /* Cuadrícula */
         .grid-header { display: flex; justify-content: space-between; align-items: center; background: var(--primary-light); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 12px; margin-bottom: 30px; }
-        .grid-item { padding: 15px 5px; text-align: center; background: var(--white); border: 2px solid var(--border-color); border-radius: 8px; font-weight: 700; font-size: 15px; color: var(--text-dark); transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .grid-item.registrada { background: var(--primary); color: var(--white); border-color: var(--primary-dark); box-shadow: 0 4px 10px rgba(0, 118, 58, 0.4); }
+        .grid-item { padding: 15px 5px; text-align: center; background: var(--white); border: 2px solid var(--border-color); border-radius: 8px; font-weight: 700; font-size: 15px; color: var(--text-dark); }
+        .grid-item.registrada { background: var(--primary); color: var(--white); border-color: var(--primary-dark); }
 
         /* Formularios */
         .form-row { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
         .form-col { flex: 1; min-width: 250px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: var(--text-dark); }
-        input[type="text"], input[type="time"], input[type="date"], input[type="month"], select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: 'Inter', sans-serif; background-color: #fafbfc; transition: border 0.3s; }
-        input:focus, select:focus { outline: none; border-color: var(--primary); background-color: var(--white); }
+        input[type="text"], input[type="number"], input[type="time"], input[type="date"], input[type="month"], input[type="week"], select { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: 'Inter', sans-serif; font-size: 14px; }
         
-        .radio-group-container { display: flex; gap: 20px; background: var(--white); padding: 15px; border: 1px solid var(--border-color); border-radius: 6px; }
-        .radio-option { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 16px; }
-        .radio-option input { width: 20px; height: 20px; accent-color: var(--primary); }
-        .radio-option.pax input { accent-color: var(--pt-pax); }
+        .radio-group-container { display: flex; gap: 20px; background: var(--white); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; }
+        .radio-option { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .radio-option.pt span { color: var(--primary); }
+        .radio-option.pax span { color: var(--pt-pax); }
 
         .checkbox-group { display: flex; align-items: center; gap: 10px; background: var(--primary-light); padding: 15px; border-radius: 6px; margin-bottom: 20px; }
-        .checkbox-group input { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); }
         
-        button.btn-submit { background: var(--primary); color: var(--white); border: none; padding: 14px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; transition: background 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button.btn-submit { background: var(--primary); color: var(--white); border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; }
         button.btn-submit:hover { background: var(--primary-dark); }
         .btn-sync { background: var(--secondary); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-sort { background: var(--text-dark); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
 
         /* Tablas */
         .table-responsive { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--white); }
-        th, td { border-bottom: 1px solid var(--border-color); padding: 15px; text-align: left; }
-        th { background-color: var(--primary); color: var(--white); font-weight: 600; white-space: nowrap; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--white); font-size: 14px; }
+        th, td { border-bottom: 1px solid var(--border-color); padding: 12px; text-align: left; }
+        th { background-color: var(--primary); color: var(--white); white-space: nowrap; }
         tr:hover { background-color: #f9f9f9; }
-        .alert { padding: 12px 15px; background: #FFF3CD; color: #856404; border-left: 5px solid #FFEEBA; margin-bottom: 10px; border-radius: 4px; }
         
         .badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; color: white; }
         .badge.pt { background: var(--primary); }
         .badge.pax { background: var(--pt-pax); }
-        .badge.vuelta2 { background: var(--text-dark); }
-
-        .stats-divider { border-top: 2px dashed var(--border-color); margin: 40px 0; }
+        .badge.motivo { background: #E67E22; }
         
-        @media (max-width: 800px) { .tabs { flex-wrap: wrap; } .tab { flex-grow: 1; text-align: center; } }
+        .money { color: var(--primary-dark); font-weight: bold; }
+        .top-card { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
+        .top-card h4 { margin: 0 0 10px 0; color: var(--text-dark); }
+        .top-card p { margin: 0; font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+
+        .filter-panel { background: #eef2f5; padding: 15px; border-radius: 8px; border: 2px solid var(--primary-light); margin-bottom: 25px; }
+
+        @media (max-width: 800px) { .logo-img { position: relative; top: 0; left: 0; display: block; margin: 0 auto; } }
     </style>
 </head>
 <body>
 
+    <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
+    <div class="version-tag">v1.1.9</div>
+
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
-        <h3 style="margin-top: 15px;">Sincronizando...</h3>
+        <h3 style="margin-top: 15px;">Procesando...</h3>
     </div>
 
     <div class="container">
         <div style="text-align: center;">
-            <h1>Registro de Vueltas</h1>
+            <h1>Reporte de Vueltas</h1>
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="openTab(event, 'Registro')">Registro de Vueltas</button>
-            <button class="tab" onclick="openTab(event, 'Historial')">Historial Global</button>
+            <button class="tab active" onclick="openTab(event, 'Registro')">Registro de vueltas</button>
+            <button class="tab" onclick="openTab(event, 'Incidencias')">Registro de diferencias</button>
             <button class="tab" onclick="openTab(event, 'Estadisticas')">Estadísticas</button>
+            <button class="tab" onclick="openTab(event, 'Historial')">Historial de vueltas</button>
+            <button class="tab" onclick="openTab(event, 'HistorialIncidencias')">Historial de diferencias</button>
         </div>
 
-        <!-- PESTAÑA: REGISTRO -->
         <div id="Registro" class="tab-content active">
             <div class="grid-header">
                 <div>
@@ -110,103 +128,143 @@
                 </div>
                 <button class="btn-sync" onclick="fetchRegistros()">Actualizar Datos</button>
             </div>
-            
-            <p style="font-size: 13px; color: #666; margin-top: -10px; margin-bottom: 20px;">* La cuadrícula solo se pinta de verde al registrar el producto <b>PT (1ra Vuelta)</b>. Sucursales en orden alfabético.</p>
+            <p style="font-size: 13px; color: #666; margin-top: -10px;">* La cuadrícula se pinta de verde al registrar la 1ra Vuelta PT.</p>
             <div class="grid" id="sucursales-grid"></div>
             
             <div style="background: var(--border-color); height: 1px; margin: 30px 0;"></div>
 
-            <h2>Nuevo Registro</h2>
-            <form id="registro-form">
-                <div class="form-row">
-                    <div class="form-col">
-                        <label>Seleccionar Sucursal:</label>
-                        <select id="sucursal" required>
-                            <option value="">-- Elige una sucursal --</option>
-                        </select>
-                    </div>
-                    <div class="form-col">
-                        <label>Almacén:</label>
-                        <div class="radio-group-container">
-                            <label class="radio-option">
-                                <input type="radio" name="tipoProducto" value="PT" checked> 
-                                <span style="font-weight: 700; color: var(--primary);">PT</span>
-                            </label>
-                            <label class="radio-option pax">
-                                <input type="radio" name="tipoProducto" value="PT PAX"> 
-                                <span style="font-weight: 700; color: var(--pt-pax);">PT PAX</span>
-                            </label>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h2>Nuevo Registro de Vuelta</h2>
+                <form id="registro-form">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label>Sucursal:</label>
+                            <select id="sucursal" required><option value="">-- Elige --</option></select>
+                        </div>
+                        <div class="form-col">
+                            <label>Almacén:</label>
+                            <div class="radio-group-container">
+                                <label class="radio-option pt"><input type="radio" name="tipoProducto" value="PT" checked><span>PT</span></label>
+                                <label class="radio-option pax"><input type="radio" name="tipoProducto" value="PT PAX"><span>PT PAX</span></label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-col">
-                        <label>Hora de llegada:</label>
-                        <input type="time" id="horaLlegada" required>
+                    <div class="form-row">
+                        <div class="form-col"><label>Llegada:</label><input type="time" id="horaLlegada" required></div>
+                        <div class="form-col"><label>Salida:</label><input type="time" id="horaSalida" required></div>
                     </div>
-                    <div class="form-col">
-                        <label>Hora de salida:</label>
-                        <input type="time" id="horaSalida" required>
+                    <div class="form-row">
+                        <div class="form-col"><label>Chofer:</label><input type="text" id="chofer" required></div>
+                        <div class="form-col"><label>Recibe (Tienda):</label><input type="text" id="recibe" required></div>
                     </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-col">
-                        <label>Chofer que entrega:</label>
-                        <input type="text" id="chofer" placeholder="Nombre del chofer" required>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="segundaVuelta">
+                        <label for="segundaVuelta" style="margin:0;">Es Segunda Vuelta</label>
                     </div>
-                    <div class="form-col">
-                        <label>Persona que recibe (Tienda):</label>
-                        <input type="text" id="recibe" placeholder="Nombre de quien recibe" required>
-                    </div>
-                </div>
-
-                <div class="checkbox-group">
-                    <input type="checkbox" id="segundaVuelta">
-                    <label for="segundaVuelta" style="margin:0;">Segunda Vuelta</label>
-                </div>
-
-                <button type="submit" class="btn-submit">Guardar Registro</button>
-            </form>
-        </div>
-
-        <!-- PESTAÑA: HISTORIAL -->
-        <div id="Historial" class="tab-content">
-            <h2>Historial Completo</h2>
-            <div class="table-responsive">
-                <table id="tabla-historial">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Sucursal</th>
-                            <th>Almacén</th>
-                            <th>Llegada</th>
-                            <th>Salida</th>
-                            <th>Chofer</th>
-                            <th>Recibe</th>
-                            <th>Vuelta</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                    <button type="submit" class="btn-submit">Guardar Vuelta</button>
+                </form>
             </div>
         </div>
 
-        <!-- PESTAÑA: ESTADÍSTICAS -->
+        <div id="Incidencias" class="tab-content">
+            <h2>Registro de Faltantes y Devoluciones</h2>
+            <form id="incidencias-form" style="background: #fdfdfd; padding: 20px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 30px;">
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Sucursal:</label>
+                        <select id="inc-sucursal" required><option value="">-- Elige --</option></select>
+                    </div>
+                    <div class="form-col">
+                        <label>Tipo de Almacén:</label>
+                        <select id="inc-tipo" onchange="cargarProductosDropdown()" required>
+                            <option value="PT">PT</option>
+                            <option value="PT PAX">PT PAX</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Producto:</label>
+                        <select id="inc-producto" required><option value="">-- Primero elige el tipo --</option></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Cantidad:</label>
+                        <input type="number" id="inc-cantidad" min="1" required>
+                    </div>
+                    <div class="form-col">
+                        <label>Estado / Movimiento:</label>
+                        <select id="inc-estado" onchange="verificarEstadoMotivo()" required>
+                            <option value="FALTÓ">Faltó en ruta</option>
+                            <option value="LLEGÓ DE MÁS">Llegó de más</option>
+                            <option value="SE REGRESÓ">Se regresó a planta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row" id="div-motivo" style="display: none;">
+                    <div class="form-col">
+                        <label>Motivo de Devolución:</label>
+                        <select id="inc-motivo" onchange="verificarJuliano()">
+                            <option value="">-- Selecciona Motivo --</option>
+                            <option value="Contaminado con líquido">Contaminado con líquido</option>
+                            <option value="Contaminado con morusas de otro pastel">Contaminado con morusas de otro pastel</option>
+                            <option value="Desmontado">Desmontado</option>
+                            <option value="Sin sello / etiqueta">Sin sello / etiqueta</option>
+                            <option value="Craquelado">Craquelado</option>
+                            <option value="Ponchado">Ponchado</option>
+                            <option value="Charola abierta">Charola abierta</option>
+                            <option value="Juliano atrasado">Juliano atrasado</option>
+                            <option value="Cubierta dañada">Cubierta dañada</option>
+                            <option value="Falta cubierta">Falta cubierta</option>
+                            <option value="Tiene un insecto">Tiene un insecto</option>
+                            <option value="En mal estado">En mal estado</option>
+                            <option value="Con cabello">Con cabello</option>
+                            <option value="Con moho">Con moho</option>
+                            <option value="Con plástico">Con plástico</option>
+                            <option value="Fruta en mal estado">Fruta en mal estado</option>
+                            <option value="Lateral dañado">Lateral dañado</option>
+                            <option value="Domo roto">Domo roto</option>
+                            <option value="Quebradas">Quebradas</option>
+                        </select>
+                    </div>
+                    <div class="form-col" id="col-inc-origen" style="display: none; max-width: 300px;">
+                        <label>¿Dónde se originó el regreso?</label>
+                        <select id="inc-origen">
+                            <option value="En la vuelta">En la vuelta</option>
+                            <option value="En sucursal">En sucursal</option>
+                        </select>
+                    </div>
+                    <div class="form-col" id="div-juliano" style="display: none;">
+                        <label>Número de Juliano:</label>
+                        <input type="text" id="inc-juliano" placeholder="Ingresar Juliano">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" style="background: var(--text-dark);">Registrar Movimiento</button>
+            </form>
+        </div>
+
         <div id="Estadisticas" class="tab-content">
-            <h2>Análisis de Llegadas</h2>
             
-            <!-- FILTROS -->
-            <div class="form-row" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
-                <div class="form-col" style="max-width: 300px;">
-                    <label>Seleccionar Mes de Análisis:</label>
-                    <input type="month" id="mes-stats" onchange="generarEstadisticas()">
+            <div class="form-row filter-panel">
+                <div class="form-col" style="max-width: 250px;">
+                    <label style="color: var(--primary-dark);">Filtrar por:</label>
+                    <select id="est-tipo-tiempo" onchange="toggleTiempoEstadisticas()" style="font-weight: bold;">
+                        <option value="mes">Mes</option>
+                        <option value="semana">Semana</option>
+                    </select>
+                </div>
+                <div class="form-col" style="max-width: 250px;">
+                    <label style="color: var(--primary-dark);">Rango de Tiempo:</label>
+                    <input type="month" id="est-mes" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
+                    <input type="week" id="est-semana" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold; display: none;">
                 </div>
                 <div class="form-col" style="max-width: 300px;">
-                    <label>Filtrar por Supervisor:</label>
-                    <select id="supervisor-stats" onchange="generarEstadisticas()">
-                        <option value="TODOS">Todos los Supervisores</option>
+                    <label style="color: var(--primary-dark);">Supervisor:</label>
+                    <select id="est-sup" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
+                        <option value="TODOS">Todos</option>
                         <option value="ADRIANA">Adriana</option>
                         <option value="CITLALLI">Citlalli</option>
                         <option value="KARLA">Karla</option>
@@ -215,402 +273,743 @@
                     </select>
                 </div>
             </div>
-            
-            <!-- SECCIÓN PT -->
-            <h2 style="color: var(--primary);">Estadísticas PT (Regular)</h2>
-            <div class="form-row">
-                <div class="form-col">
-                    <h3>Promedio de Llegada (PT)</h3>
-                    <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
-                        <table id="tabla-promedios-pt">
-                            <thead><tr><th>Sucursal</th><th>Supervisor</th><th>Hora Promedio</th></tr></thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+
+            <div class="sub-tabs">
+                <button class="sub-tab active" onclick="openSubTab(event, 'SubEst-Promedio')">Promedio de llegada</button>
+                <button class="sub-tab" onclick="openSubTab(event, 'SubEst-Tiempos')">Análisis de tiempos</button>
+                <button class="sub-tab" onclick="openSubTab(event, 'SubEst-Movimientos')">Estadísticas de diferencias</button>
+            </div>
+
+            <div id="SubEst-Promedio" class="sub-tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h2 style="margin: 0;">Promedio de Llegada por Sucursal</h2>
+                    <button class="btn-sort" onclick="toggleOrdenPromedios()">Alternar Orden de Llegada ⇅</button>
                 </div>
-                <div class="form-col">
-                    <h3>Alertas: Vueltas PT No Reportadas</h3>
-                    <p style="font-size: 13px; color: #666;">Días donde no hay registro PT (1ra vuelta).</p>
-                    <div id="lista-faltantes" style="max-height: 350px; overflow-y: auto; padding-right: 10px;"></div>
+                <div class="table-responsive" style="margin-bottom: 30px;">
+                    <table id="tabla-promedios-llegada">
+                        <thead><tr><th>Sucursal</th><th>Promedio PT</th><th>Promedio PT PAX</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
-            <div style="margin-top: 30px;">
+
+            <div id="SubEst-Tiempos" class="sub-tab-content">
+                <h2>Análisis de Tiempos de Llegada</h2>
+                <h3 style="color: var(--primary);">Promedios PT (Regular)</h3>
                 <canvas id="graficaLlegadasPT" height="100"></canvas>
-            </div>
-
-            <div class="stats-divider"></div>
-
-            <!-- SECCIÓN PT PAX -->
-            <h2 style="color: var(--pt-pax);">Estadísticas PT PAX</h2>
-            <p style="font-size: 14px; color: #666;">El PT PAX no requiere alertas de falta diaria, solo promedios de tiempo de los días que sí llega.</p>
-            <div class="form-row">
-                <div class="form-col">
-                    <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
-                        <table id="tabla-promedios-pax">
-                            <thead style="background: var(--pt-pax);"><tr><th style="background: var(--pt-pax);">Sucursal</th><th style="background: var(--pt-pax);">Supervisor</th><th style="background: var(--pt-pax);">Hora Promedio (PAX)</th></tr></thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div style="margin-top: 30px;">
+                <div style="margin: 30px 0;"></div>
+                <h3 style="color: var(--pt-pax);">Promedios PT PAX</h3>
                 <canvas id="graficaLlegadasPAX" height="100"></canvas>
             </div>
 
+            <div id="SubEst-Movimientos" class="sub-tab-content">
+                <h2>Estadísticas de Movimientos y Top Productos</h2>
+                <div class="form-row" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
+                    <div class="form-col">
+                        <label>Filtrar por Estado:</label>
+                        <select id="filtro-inc-estado" onchange="renderStatsIncidencias()">
+                            <option value="TODOS">Todos</option>
+                            <option value="FALTÓ">Faltó en ruta</option>
+                            <option value="LLEGÓ DE MÁS">Llegó de más</option>
+                            <option value="SE REGRESÓ">Se regresó a planta</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <label>Filtrar por Sucursal:</label>
+                        <select id="filtro-inc-sucursal" onchange="renderStatsIncidencias()">
+                            <option value="TODAS">Todas las Sucursales</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="top-card">
+                            <h4>Impacto Total (PT)</h4>
+                            <p id="total-dinero-pt">$0.00</p>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="top-card">
+                            <h4>Impacto Total (PT PAX)</h4>
+                            <p id="total-dinero-pax" style="color: var(--pt-pax);">$0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <h3>Top Productos Afectados (Por Cantidad)</h3>
+                        <div class="table-responsive">
+                            <table id="tabla-top-productos">
+                                <thead><tr><th>Producto</th><th>Cantidad</th><th>Valor Total ($)</th></tr></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <div id="Historial" class="tab-content">
+            <h2>Historial de Vueltas</h2>
+            <div class="form-row filter-panel">
+                <div class="form-col" style="min-width: 150px;">
+                    <label>Filtrar por:</label>
+                    <select id="hist-tipo-tiempo" onchange="toggleTiempoHistorial()">
+                        <option value="mes">Mes</option>
+                        <option value="semana">Semana</option>
+                    </select>
+                </div>
+                <div class="form-col" style="min-width: 200px;">
+                    <label>Rango:</label>
+                    <input type="month" id="hist-mes" onchange="renderHistorial()">
+                    <input type="week" id="hist-semana" style="display:none;" onchange="renderHistorial()">
+                </div>
+                <div class="form-col">
+                    <label>Supervisor:</label>
+                    <select id="hist-sup" onchange="filtrarSucursalesHistorial()"><option value="TODOS">Todos</option></select>
+                </div>
+                <div class="form-col">
+                    <label>Sucursal:</label>
+                    <select id="hist-suc" onchange="renderHistorial()"><option value="TODAS">Todas</option></select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="tabla-historial">
+                    <thead><tr><th>Fecha</th><th>Sucursal</th><th>Almacén</th><th>Llegada</th><th>Salida</th><th>Vuelta</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="HistorialIncidencias" class="tab-content">
+            <h2>Historial de Diferencias</h2>
+            <div class="form-row filter-panel">
+                <div class="form-col" style="min-width: 150px;">
+                    <label>Filtrar por:</label>
+                    <select id="hinc-tipo-tiempo" onchange="toggleTiempoHInc()">
+                        <option value="mes">Mes</option>
+                        <option value="semana">Semana</option>
+                    </select>
+                </div>
+                <div class="form-col" style="min-width: 200px;">
+                    <label>Rango:</label>
+                    <input type="month" id="hinc-mes" onchange="renderHistorialIncidencias()">
+                    <input type="week" id="hinc-semana" style="display:none;" onchange="renderHistorialIncidencias()">
+                </div>
+                <div class="form-col">
+                    <label>Supervisor:</label>
+                    <select id="hinc-sup" onchange="filtrarSucursalesHInc()"><option value="TODOS">Todos</option></select>
+                </div>
+                <div class="form-col">
+                    <label>Sucursal:</label>
+                    <select id="hinc-suc" onchange="renderHistorialIncidencias()"><option value="TODAS">Todas</option></select>
+                </div>
+            </div>
+
+            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                <table id="tabla-historial-incidencias">
+                    <thead><tr><th>Fecha</th><th>Sucursal</th><th>Tipo</th><th>Producto</th><th>Cant.</th><th>Estado</th><th>Detalles Extra</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // ==========================================
-        // 1. PEGA TU URL DE GOOGLE APPS SCRIPT AQUÍ
-        // ==========================================
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwWO3o4eQTH8_xTh-w4IM2Bn3IWd1ZC15kRPHAwR7ca8eUMusbUfz3En0hG6_qZe5A/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwWO3o4eQTH8_xTh-w4IM2Bn3IWd1ZC15kRPHAwR7ca8eUMusbUfz3En0hG6_qZe5A/exec"; // IMPORTANTE: Pegar el nuevo URL de tu Script
         
-        // Base de datos de sucursales con supervisores
-        let sucursales = [
-            { id: "ACA", name: "AVILA CAMACHO", supervisor: "ADRIANA" },
-            { id: "IND", name: "INDEPENDENCIA", supervisor: "ADRIANA" },
-            { id: "RCE", name: "REAL CENTER", supervisor: "ADRIANA" },
-            { id: "SIS", name: "SAN ISIDRO", supervisor: "ADRIANA" },
-            { id: "TES", name: "TESISTAN", supervisor: "ADRIANA" },
-            { id: "TET", name: "TETLAN", supervisor: "ADRIANA" },
-            { id: "TRA", name: "TRANSITO", supervisor: "ADRIANA" },
-            { id: "SLU", name: "SANTA LUCIA", supervisor: "ADRIANA" },
-            { id: "AME", name: "AMERICAS", supervisor: "CITLALLI" },
-            { id: "CHA", name: "CHAPULTEPEC", supervisor: "CITLALLI" },
-            { id: "FED", name: "FEDERALTA", supervisor: "CITLALLI" },
-            { id: "LPA", name: "LA PAZ", supervisor: "CITLALLI" },
-            { id: "OBL", name: "OBLATOS", supervisor: "CITLALLI" },
-            { id: "POR", name: "PUNTO ORIENTE", supervisor: "CITLALLI" },
-            { id: "REV", name: "REVOLUCION", supervisor: "CITLALLI" },
-            { id: "TEC", name: "TECHNOLOGY", supervisor: "CITLALLI" },
-            { id: "ALC", name: "ALCALDE", supervisor: "KARLA" },
-            { id: "COL", name: "COLON", supervisor: "KARLA" },
-            { id: "EIG", name: "EXPENDIO INGLATERRA", supervisor: "KARLA" },
-            { id: "ETE", name: "EXPENDIO TEPEYAC", supervisor: "KARLA" },
-            { id: "GCO", name: "GOLFO DE CORTES", supervisor: "KARLA" },
-            { id: "GUA", name: "GUADALUPE", supervisor: "KARLA" },
-            { id: "ING", name: "INGLATERRA", supervisor: "KARLA" },
-            { id: "JUA", name: "JUAREZ", supervisor: "KARLA" },
-            { id: "NOB", name: "NIÑO OBRERO", supervisor: "KARLA" },
-            { id: "AER", name: "AEROPUERTO", supervisor: "LEONARDO" },
-            { id: "ALT", name: "ALTEA", supervisor: "LEONARDO" },
-            { id: "CPI", name: "CENTRO LAS PINTAS", supervisor: "LEONARDO" },
-            { id: "COC", name: "CONCEPCION", supervisor: "LEONARDO" },
-            { id: "RMI", name: "R MICHEL", supervisor: "LEONARDO" },
-            { id: "RPL", name: "RIO PLAZA", supervisor: "LEONARDO" },
-            { id: "SFE", name: "SANTA FE", supervisor: "LEONARDO" },
-            { id: "TLA", name: "TLAQUEPAQUE", supervisor: "LEONARDO" },
-            { id: "TON", name: "TONALA", supervisor: "LEONARDO" },
-            { id: "BUG", name: "BUGAMBILIAS", supervisor: "NOEMI" },
-            { id: "CRE", name: "CAMINO REAL", supervisor: "NOEMI" },
-            { id: "CGR", name: "CIUDAD GRANJA", supervisor: "NOEMI" },
-            { id: "GAL", name: "GALERIAS", supervisor: "NOEMI" },
-            { id: "HIS", name: "HISTORIADORES", supervisor: "NOEMI" },
-            { id: "LCA", name: "LA CALMA", supervisor: "NOEMI" },
-            { id: "LPL", name: "LAPISLAZULI", supervisor: "NOEMI" },
-            { id: "MOT", name: "MARIANO OTERO", supervisor: "NOEMI" },
+        const sucursales = [
+            { id: "ACA", name: "AVILA CAMACHO", supervisor: "ADRIANA" }, { id: "IND", name: "INDEPENDENCIA", supervisor: "ADRIANA" },
+            { id: "RCE", name: "REAL CENTER", supervisor: "ADRIANA" }, { id: "SIS", name: "SAN ISIDRO", supervisor: "ADRIANA" },
+            { id: "TES", name: "TESISTAN", supervisor: "ADRIANA" }, { id: "TET", name: "TETLAN", supervisor: "ADRIANA" },
+            { id: "TRA", name: "TRANSITO", supervisor: "ADRIANA" }, { id: "SLU", name: "SANTA LUCIA", supervisor: "ADRIANA" },
+            { id: "AME", name: "AMERICAS", supervisor: "CITLALLI" }, { id: "CHA", name: "CHAPULTEPEC", supervisor: "CITLALLI" },
+            { id: "FED", name: "FEDERALTA", supervisor: "CITLALLI" }, { id: "LPA", name: "LA PAZ", supervisor: "CITLALLI" },
+            { id: "OBL", name: "OBLATOS", supervisor: "CITLALLI" }, { id: "POR", name: "PUNTO ORIENTE", supervisor: "CITLALLI" },
+            { id: "REV", name: "REVOLUCION", supervisor: "CITLALLI" }, { id: "TEC", name: "TECHNOLOGY", supervisor: "CITLALLI" },
+            { id: "ALC", name: "ALCALDE", supervisor: "KARLA" }, { id: "COL", name: "COLON", supervisor: "KARLA" },
+            { id: "EIG", name: "EXPENDIO INGLATERRA", supervisor: "KARLA" }, { id: "ETE", name: "EXPENDIO TEPEYAC", supervisor: "KARLA" },
+            { id: "GCO", name: "GOLFO DE CORTES", supervisor: "KARLA" }, { id: "GUA", name: "GUADALUPE", supervisor: "KARLA" },
+            { id: "ING", name: "INGLATERRA", supervisor: "KARLA" }, { id: "JUA", name: "JUAREZ", supervisor: "KARLA" },
+            { id: "NOB", name: "NIÑO OBRERO", supervisor: "KARLA" }, { id: "AER", name: "AEROPUERTO", supervisor: "LEONARDO" },
+            { id: "ALT", name: "ALTEA", supervisor: "LEONARDO" }, { id: "CPI", name: "CENTRO LAS PINTAS", supervisor: "LEONARDO" },
+            { id: "COC", name: "CONCEPCION", supervisor: "LEONARDO" }, { id: "RMI", name: "R MICHEL", supervisor: "LEONARDO" },
+            { id: "RPL", name: "RIO PLAZA", supervisor: "LEONARDO" }, { id: "SFE", name: "SANTA FE", supervisor: "LEONARDO" },
+            { id: "TLA", name: "TLAQUEPAQUE", supervisor: "LEONARDO" }, { id: "TON", name: "TONALA", supervisor: "LEONARDO" },
+            { id: "BUG", name: "BUGAMBILIAS", supervisor: "NOEMI" }, { id: "CRE", name: "CAMINO REAL", supervisor: "NOEMI" },
+            { id: "CGR", name: "CIUDAD GRANJA", supervisor: "NOEMI" }, { id: "GAL", name: "GALERIAS", supervisor: "NOEMI" },
+            { id: "HIS", name: "HISTORIADORES", supervisor: "NOEMI" }, { id: "LCA", name: "LA CALMA", supervisor: "NOEMI" },
+            { id: "LPL", name: "LAPISLAZULI", supervisor: "NOEMI" }, { id: "MOT", name: "MARIANO OTERO", supervisor: "NOEMI" },
             { id: "PSO", name: "PLAZA DEL SOL", supervisor: "NOEMI" }
-        ];
+        ].sort((a, b) => a.name.localeCompare(b.name));
 
-        // Ordenar alfabéticamente por el NOMBRE de la sucursal
-        sucursales.sort((a, b) => a.name.localeCompare(b.name));
+        const productosDB = [
+            {tipo: "PT PAX", nombre: "BOLIS CAPUCCINO", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLIS MANGO", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLIS CHAI", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLIS CHOCOLATE", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLIS FRESA", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLIS TARO", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLIS VAINILLA", precio: 60},
+            {tipo: "PT PAX", nombre: "BOLO GALLETA NAV", precio: 105},
+            {tipo: "PT PAX", nombre: "BOTE HELADO ALMENDRA", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO CARAMEL BROWNIE AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO CARAMELO SALADO AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO CHOCOLATE AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO CHOCOLOCO AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO FRESA AGUA AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO FRESA AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO FRESA FIT AMORIPAX", precio: 250},
+            {tipo: "PT PAX", nombre: "BOTE HELADO GALLETA LOTUS AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO MAGIA DE YOGURT AMORIPAX", precio: 250},
+            {tipo: "PT PAX", nombre: "BOTE HELADO MONKEY BANANA AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO NONNA TERESA AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO NUEX AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO OREO LOVERS AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO TIRAMISU AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "BOTE HELADO VAINILLA AMORIPAX", precio: 125},
+            {tipo: "PT PAX", nombre: "PASTEL HELADO CHOCOAVELLANA AMORIPAX", precio: 455},
+            {tipo: "PT PAX", nombre: "PASTEL HELADO OREO AMORIPAX", precio: 440},
+            {tipo: "PT PAX", nombre: "PASTEL HELADO PARTY CAKE AMORIPAX", precio: 440},
+            {tipo: "PT PAX", nombre: "PORCION HELADO CARAMEL BROWNIE AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO CARAMELO SALADO AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO CHOCO LOCO AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO CHOCOLATE AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO FRESA AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO FRESA FIT AMORIPAX", precio: 90},
+            {tipo: "PT PAX", nombre: "PORCION HELADO GALLETA LOTUS", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO JHON LEMON AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO MAGIA DE YOGHURT AMORIPAX", precio: 90},
+            {tipo: "PT PAX", nombre: "PORCION HELADO MAZAPAX AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO MONKEY BANANA AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO NUEX AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO OREO LOVERS AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO PISTACHE AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO TIRAMISU AMORIPAX", precio: 47},
+            {tipo: "PT PAX", nombre: "PORCION HELADO VAINILLA  AMORIPAX", precio: 47},
+            {tipo: "PT", nombre: "SMOOTHIE CHAI DESLACTOSADO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE CHOCOLATE DESLACTOSADO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE CHAI ENTERO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE CHOCOLATE ENTERO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE CHAI LIGHT", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE CHOCOLATE LIGHT", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE FRESA DESLACTOSADO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE FRESA ENTERO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE FRESA LIGHT", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE TARO DESLACTOSADO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE TARO ENTERO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE TARO LIGHT", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE VAINILLA DESLACTOSADO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE VAINILLA ENTERO", precio: 60},
+            {tipo: "PT", nombre: "SMOOTHIE VAINILLA LIGHT", precio: 60},
+            {tipo: "PT", nombre: "CAPUCCINO DESLACTOSADO", precio: 60},
+            {tipo: "PT", nombre: "CAPUCCINO ENTERO", precio: 60},
+            {tipo: "PT", nombre: "CAPUCCINO LIGHT", precio: 60},
+            {tipo: "PT", nombre: "BROWNIE CHOCOLATE", precio: 40},
+            {tipo: "PT", nombre: "BROWNIE CHOCORROCAS", precio: 40},
+            {tipo: "PT", nombre: "BROWNIE PHILADELPHIA", precio: 40},
+            {tipo: "PT", nombre: "CAJA BROWNIE SURTIDO", precio: 99},
+            {tipo: "PT", nombre: "CAJA GALLETA ARANDANO Y AVENA BAJA EN AZUCAR", precio: 100},
+            {tipo: "PT", nombre: "CAJA GALLETA CAJETA Y COCO 8P", precio: 115},
+            {tipo: "PT", nombre: "CAJA GALLETA CHOCOLATE CORAZON", precio: 136},
+            {tipo: "PT", nombre: "CAJA GALLETA FRESA", precio: 105},
+            {tipo: "PT", nombre: "CAJA GALLETA FRESA ESTRELLA", precio: 105},
+            {tipo: "PT", nombre: "CAJA GALLETA FRESA SAN VALENTIN", precio: 105},
+            {tipo: "PT", nombre: "CAJA GALLETA GARABATO CORAZON", precio: 97},
+            {tipo: "PT", nombre: "CAJA TRUFFELD CON LICOR", precio: 155},
+            {tipo: "PT", nombre: "CAJA TRUFFELD SIN LICOR", precio: 155},
+            {tipo: "PT", nombre: "CHEESECAKE FRUTOS ROJOS CHICO", precio: 500},
+            {tipo: "PT", nombre: "CHEESECAKE FRUTOS ROJOS GRANDE", precio: 650},
+            {tipo: "PT", nombre: "CHEESECAKE MANZANA GRANDE", precio: 650},
+            {tipo: "PT", nombre: "FLAN NAPOLITANO", precio: 380},
+            {tipo: "PT", nombre: "GALLETA BOLO SURTIDA", precio: 105},
+            {tipo: "PT", nombre: "CAJA GALLETA SURTIDA", precio: 145},
+            {tipo: "PT", nombre: "GALLETA CAJA ZANAHORIA LIGERA", precio: 75},
+            {tipo: "PT", nombre: "GALLETA CHAROLA 1KG SURTIDA", precio: 325},
+            {tipo: "PT", nombre: "GALLETA PARTY COOKIE", precio: 35},
+            {tipo: "PT", nombre: "GALLETA RED VELVET", precio: 25},
+            {tipo: "PT", nombre: "GELATINA CARAJILLO", precio: 335},
+            {tipo: "PT", nombre: "GELATINA FRUTA LIGERA", precio: 380},
+            {tipo: "PT", nombre: "GELATINA FRUTOS ROJOS", precio: 365},
+            {tipo: "PT", nombre: "GELATINA IND CARAJILLO", precio: 40},
+            {tipo: "PT", nombre: "GELATINA IND FRUTAS LIGERA", precio: 40},
+            {tipo: "PT", nombre: "GELATINA IND FRUTOS ROJOS", precio: 40},
+            {tipo: "PT", nombre: "GELATINA IND LECHE Y FRUTAS", precio: 40},
+            {tipo: "PT", nombre: "GELATINA IND MOSAICO", precio: 40},
+            {tipo: "PT", nombre: "GELATINA LECHE Y FRUTAS", precio: 325},
+            {tipo: "PT", nombre: "GELATINA MOSAICO", precio: 325},
+            {tipo: "PT", nombre: "GELATINA ROSCA DE FRUTAS", precio: 375},
+            {tipo: "PT", nombre: "GELATINA YOGURTH LIGERO", precio: 335},
+            {tipo: "PT", nombre: "MINI ESPECIAL 14 DE FEBRERO", precio: 195},
+            {tipo: "PT", nombre: "MINI 3 LECHES", precio: 170},
+            {tipo: "PT", nombre: "MINI ARCOIRIS", precio: 170},
+            {tipo: "PT", nombre: "MINI CHEESECAKE", precio: 185},
+            {tipo: "PT", nombre: "MINI CHEESECAKE MANZANA", precio: 185},
+            {tipo: "PT", nombre: "MINI DOBLE CHOCOLATE", precio: 170},
+            {tipo: "PT", nombre: "MINI MOKA", precio: 170},
+            {tipo: "PT", nombre: "MINI VELVET", precio: 185},
+            {tipo: "PT", nombre: "MINI ZANAHORIA", precio: 185},
+            {tipo: "PT", nombre: "MINI ROSCA PHILADELPHIA", precio: 170},
+            {tipo: "PT", nombre: "MUFFIN RED VELVET SAN VALENTIN", precio: 26},
+            {tipo: "PT", nombre: "PAN DE MUERTO", precio: 66},
+            {tipo: "PT", nombre: "PAN DE MUERTO CON RELLENO", precio: 90},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES CAJETA", precio: 470},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES CEREZA", precio: 470},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES CHOCO BLANCO", precio: 470},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES CHOCOLATE", precio: 470},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES DURAZNO", precio: 480},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES FRESAS CON CREMA", precio: 480},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES MANGO", precio: 480},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES NUEZ", precio: 470},
+            {tipo: "PT", nombre: "PASTEL 3 LECHES ROMPOPE", precio: 470},
+            {tipo: "PT", nombre: "PASTEL FRESA MIDI BAJO EN AZUCAR", precio: 330},
+            {tipo: "PT", nombre: "PASTEL ARCOIRIS", precio: 460},
+            {tipo: "PT", nombre: "PASTEL CHOCOLATE", precio: 460},
+            {tipo: "PT", nombre: "PASTEL CHOCOLATE ALEMAN", precio: 460},
+            {tipo: "PT", nombre: "PASTEL DOBLE CHOCOLATE", precio: 460},
+            {tipo: "PT", nombre: "PASTEL FRESA", precio: 470},
+            {tipo: "PT", nombre: "PASTEL MOKA", precio: 470},
+            {tipo: "PT", nombre: "PASTEL NUEZ", precio: 460},
+            {tipo: "PT", nombre: "PASTEL TIRAMISU", precio: 410},
+            {tipo: "PT", nombre: "PASTEL VELVET", precio: 460},
+            {tipo: "PT", nombre: "PASTEL ZANAHORIA", precio: 490},
+            {tipo: "PT", nombre: "PAY DE QUESO LIGERO", precio: 375},
+            {tipo: "PT", nombre: "REBANADA FLAN", precio: 50},
+            {tipo: "PT", nombre: "REBANADA ROSCA CHOCOLATE", precio: 50},
+            {tipo: "PT", nombre: "REBANADA ROSCA PHILADELPHIA", precio: 50},
+            {tipo: "PT", nombre: "REBANADA ARCOIRIS", precio: 60},
+            {tipo: "PT", nombre: "REBANADA CHOCOLATE", precio: 60},
+            {tipo: "PT", nombre: "REBANADA CHOCOLATE ALEMAN", precio: 60},
+            {tipo: "PT", nombre: "REBANADA DOBLE CHOCOLATE", precio: 60},
+            {tipo: "PT", nombre: "REBANADA FRESA", precio: 60},
+            {tipo: "PT", nombre: "REBANADA MOKA", precio: 60},
+            {tipo: "PT", nombre: "REBANADA NUEZ", precio: 60},
+            {tipo: "PT", nombre: "REBANADA RED VELVET", precio: 60},
+            {tipo: "PT", nombre: "REBANADA TIRAMISU", precio: 60},
+            {tipo: "PT", nombre: "REBANADA ZANAHORIA", precio: 60},
+            {tipo: "PT", nombre: "REBANADA CHEESE CAKE FRUTOS ROJOS", precio: 75},
+            {tipo: "PT", nombre: "REBANADA CHEESE CAKE MANZANA", precio: 75},
+            {tipo: "PT", nombre: "REBANADA 3 LECHES CAJETA", precio: 70},
+            {tipo: "PT", nombre: "REBANADA 3 LECHES CEREZA", precio: 70},
+            {tipo: "PT", nombre: "REBANADA 3 LECHES CHOCOLATE", precio: 70},
+            {tipo: "PT", nombre: "REBANADA 3 LECHES FRESAS CON CREMA", precio: 70},
+            {tipo: "PT", nombre: "REBANADA 3 LECHES MANGO", precio: 70},
+            {tipo: "PT", nombre: "REBANADA 3 LECHES ROMPOPE", precio: 70},
+            {tipo: "PT", nombre: "REBANADA CHOCOAVELLANA", precio: 60},
+            {tipo: "PT", nombre: "REBANADA OREO", precio: 60},
+            {tipo: "PT", nombre: "REBANADA PARTY CAKE", precio: 60},
+            {tipo: "PT", nombre: "MIDI ROLLO MANGO", precio: 210},
+            {tipo: "PT", nombre: "ROSCA CHOCOLATE", precio: 395},
+            {tipo: "PT", nombre: "ROSCA PHILADELPHIA", precio: 395},
+            {tipo: "PT", nombre: "ROSCA REYES CHICA CAJETA", precio: 355},
+            {tipo: "PT", nombre: "ROSCA REYES CHICA CHOCOLATE", precio: 355},
+            {tipo: "PT", nombre: "ROSCA REYES CHICA CREMA", precio: 355},
+            {tipo: "PT", nombre: "ROSCA REYES GRANDE CAJETA", precio: 540},
+            {tipo: "PT", nombre: "ROSCA REYES GRANDE CHOCOLATE", precio: 540},
+            {tipo: "PT", nombre: "ROSCA REYES GRANDE CREMA", precio: 540},
+            {tipo: "PT", nombre: "STRUDEL DE MANZANA", precio: 225},
+            {tipo: "PT", nombre: "STRUDEL DE MANZANA LIGERO", precio: 215},
+            {tipo: "PT", nombre: "CAJA CHICA TRANSPARENTE GALLETA NAVIDEÑA SURTIDA", precio: 105},
+            {tipo: "PT", nombre: "CAJA GALLETA NAV SURTIDO", precio: 145},
+            {tipo: "PT", nombre: "CHAROLA GALLETA NAV SURTIDO", precio: 325},
+            {tipo: "PT", nombre: "CAJA NAV SURTIDO BROWNIE", precio: 99},
+            {tipo: "PT", nombre: "CHAROLA 1KG GALLETA NAVIDEÑA", precio: 325},
+            {tipo: "PT", nombre: "TRONCO NAVIDEÑO", precio: 345},
+            {tipo: "PT", nombre: "MUFFIN INDIVIDUAL SAN VALENTIN", precio: 27},
+            {tipo: "PT", nombre: "CAJA MUFFIN SAN VALENTIN", precio: 168},
+            {tipo: "PT", nombre: "CAJA TRUFFELD SAN VALENTIN CON LICOR", precio: 155},
+            {tipo: "PT", nombre: "CAJA TRUFFELD SAN VALENTIN SIN LICOR", precio: 155},
+            {tipo: "PT", nombre: "CAJA GALLETA CORAZON GARABATO", precio: 130},
+            {tipo: "PT", nombre: "PASTEL MINI SAN VALENTIN", precio: 195},
+            {tipo: "PT", nombre: "GALLETA RED VELVET SAN VALENTIN", precio: 29},
+            {tipo: "PT", nombre: "BROWNIE RED VELVET", precio: 40},
+            {tipo: "PT", nombre: "CAJA GALLETA SANDWICH NAVIDEÑA", precio: 105},
+            {tipo: "PT", nombre: "CAJA GALLETA SA NDWICH NAVIDEÑA", precio: 105},
+            {tipo: "PT", nombre: "CAJA GALLETA ESTRELLA FRESA", precio: 105},
+            {tipo: "PT", nombre: "CAJA TRUFFELD SIN LICOR NAVIDAD", precio: 150},
+            {tipo: "PT", nombre: "CAJA TRUFFELD CON LICOR NAVIDAD", precio: 150},
+            {tipo: "PT", nombre: "CAJA CHICA KRAFT GALLETA NAVIDEÑA SURTIDA", precio: 105},
+            {tipo: "PT", nombre: "CAJA MEDIANA KRAFT GALLETA NAVIDEÑA SURTIDA", precio: 145},
+            {tipo: "PT", nombre: "CAJA GRANDE KRAFT GALLETA NAVIDEÑA SURTIDA", precio: 325}
+        ].sort((a,b) => a.nombre.localeCompare(b.nombre));
 
         let registros = [];
+        let incidenciasLocales = []; 
         let chartPT = null;
         let chartPAX = null;
+        let ordenPromediosAsc = true; 
 
         const loader = document.getElementById('loader');
-        const fechaInput = document.getElementById('fechaRegistro');
 
-        const getHoyStr = () => {
-            const d = new Date();
-            return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
-        };
+        // HELPERS FECHAS Y SEMANAS ISO
+        const getHoyStr = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0'); };
+        
+        function getISOWeekString(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('-');
+            const date = new Date(parts[0], parts[1] - 1, parts[2]); 
+            date.setHours(0, 0, 0, 0);
+            date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+            const week1 = new Date(date.getFullYear(), 0, 4);
+            const weekNumber = 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+            return `${date.getFullYear()}-W${String(weekNumber).padStart(2, '0')}`;
+        }
 
+        // TABS
         function openTab(evt, tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
-
             if(tabName === 'Historial') renderHistorial();
-            if(tabName === 'Estadisticas') generarEstadisticas();
+            if(tabName === 'HistorialIncidencias') renderHistorialIncidencias();
+            if(tabName === 'Estadisticas') actualizarEstadisticasGlobales(); 
+        }
+        function openSubTab(evt, tabName) {
+            document.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.sub-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // TOGGLES FILTROS TIEMPO
+        function toggleTiempoEstadisticas() {
+            const val = document.getElementById("est-tipo-tiempo").value;
+            document.getElementById("est-mes").style.display = val === "mes" ? "block" : "none";
+            document.getElementById("est-semana").style.display = val === "semana" ? "block" : "none";
+            actualizarEstadisticasGlobales();
+        }
+        function toggleTiempoHistorial() {
+            const val = document.getElementById("hist-tipo-tiempo").value;
+            document.getElementById("hist-mes").style.display = val === "mes" ? "block" : "none";
+            document.getElementById("hist-semana").style.display = val === "semana" ? "block" : "none";
+            renderHistorial();
+        }
+        function toggleTiempoHInc() {
+            const val = document.getElementById("hinc-tipo-tiempo").value;
+            document.getElementById("hinc-mes").style.display = val === "mes" ? "block" : "none";
+            document.getElementById("hinc-semana").style.display = val === "semana" ? "block" : "none";
+            renderHistorialIncidencias();
         }
 
         window.onload = function() {
-            fechaInput.value = getHoyStr();
-            fechaInput.addEventListener('change', actualizarCuadricula);
+            document.getElementById('fechaRegistro').value = getHoyStr();
+            document.getElementById('fechaRegistro').addEventListener('change', () => actualizarCuadricula());
 
-            const select = document.getElementById("sucursal");
+            const hoy = getHoyStr();
+            const mesActual = hoy.substring(0,7);
+            const semActual = getISOWeekString(hoy);
+
+            // Setear fechas default
+            ["est-mes", "hist-mes", "hinc-mes"].forEach(id => document.getElementById(id).value = mesActual);
+            ["est-semana", "hist-semana", "hinc-semana"].forEach(id => document.getElementById(id).value = semActual);
+
+            // Llenar selects
             const grid = document.getElementById("sucursales-grid");
-
-            // Rellenar select y cuadrícula (ahora ya están ordenadas alfabéticamente)
+            const selectsSuc = ["sucursal", "inc-sucursal", "filtro-inc-sucursal"];
+            const selectsSup = ["hist-sup", "hinc-sup"];
+            
+            let supSet = new Set();
             sucursales.forEach(suc => {
-                let opt = document.createElement("option"); opt.value = suc.id; opt.innerText = `${suc.id} - ${suc.name}`; select.appendChild(opt);
-                let div = document.createElement("div"); div.id = "grid-" + suc.id; div.className = "grid-item"; div.innerText = suc.id; div.title = suc.name; grid.appendChild(div);
+                let optStr = `<option value="${suc.id}">${suc.id} - ${suc.name}</option>`;
+                selectsSuc.forEach(id => document.getElementById(id).innerHTML += optStr);
+                supSet.add(suc.supervisor);
+                
+                let div = document.createElement("div"); div.id = "grid-" + suc.id; div.className = "grid-item"; div.innerText = suc.id; div.title = suc.name;
+                grid.appendChild(div);
             });
 
-            const d = new Date();
-            document.getElementById("mes-stats").value = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0');
+            Array.from(supSet).sort().forEach(sup => {
+                selectsSup.forEach(id => document.getElementById(id).innerHTML += `<option value="${sup}">${sup}</option>`);
+            });
+
+            filtrarSucursalesHistorial();
+            filtrarSucursalesHInc();
+            cargarProductosDropdown();
             fetchRegistros();
         };
 
         function fetchRegistros() {
-            if(SCRIPT_URL === "AQUI_PEGA_TU_URL") {
-                alert("Modo local (Sin Google Sheets configurado).");
-                return;
-            }
+            if(SCRIPT_URL === "AQUI_PEGA_TU_URL") return;
             loader.style.display = 'flex';
             fetch(SCRIPT_URL)
                 .then(res => res.json())
                 .then(data => {
-                    registros = data;
+                    // ESTA LÍNEA ES LA QUE ARREGLA LA CUADRÍCULA (Limpia la fecha)
+                    registros = data.vueltas.map(r => ({ ...r, fecha: r.fecha ? r.fecha.toString().substring(0, 10) : '' }));
+                    incidenciasLocales = data.incidencias || [];
                     actualizarCuadricula();
+                    actualizarEstadisticasGlobales();
                     loader.style.display = 'none';
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("Error cargando base de datos.");
-                    loader.style.display = 'none';
-                });
+                }).catch(err => { console.error(err); alert("Error cargando DB."); loader.style.display = 'none'; });
         }
 
         function actualizarCuadricula() {
-            const fechaSeleccionada = fechaInput.value;
-            const registrosDia = registros.filter(r => r.fecha === fechaSeleccionada && !r.esSegundaVuelta && r.tipoProducto === "PT");
-            const sucursalesRegistradas = new Set(registrosDia.map(r => r.sucursal));
-
+            const fecha = document.getElementById('fechaRegistro').value;
+            const sucsReg = new Set(registros.filter(r => r.fecha === fecha && !r.esSegundaVuelta && r.tipoProducto === "PT").map(r => r.sucursal));
             sucursales.forEach(suc => {
                 const el = document.getElementById("grid-" + suc.id);
-                if(sucursalesRegistradas.has(suc.id)) {
-                    el.classList.add("registrada");
-                } else {
-                    el.classList.remove("registrada");
-                }
+                sucsReg.has(suc.id) ? el.classList.add("registrada") : el.classList.remove("registrada");
             });
         }
 
+        // REGISTRO VUELTAS NORMAL
         document.getElementById("registro-form").addEventListener("submit", function(e) {
             e.preventDefault();
-            
-            const tipoSeleccionado = document.querySelector('input[name="tipoProducto"]:checked').value;
-
             const nuevoRegistro = {
-                fecha: document.getElementById("fechaRegistro").value,
-                sucursal: document.getElementById("sucursal").value,
-                tipoProducto: tipoSeleccionado,
-                horaLlegada: document.getElementById("horaLlegada").value,
-                horaSalida: document.getElementById("horaSalida").value,
-                chofer: document.getElementById("chofer").value,
-                recibe: document.getElementById("recibe").value,
+                fecha: document.getElementById("fechaRegistro").value, sucursal: document.getElementById("sucursal").value, 
+                tipoProducto: document.querySelector('input[name="tipoProducto"]:checked').value,
+                horaLlegada: document.getElementById("horaLlegada").value, horaSalida: document.getElementById("horaSalida").value,
+                chofer: document.getElementById("chofer").value, recibe: document.getElementById("recibe").value, 
                 esSegundaVuelta: document.getElementById("segundaVuelta").checked
             };
-
-            if(SCRIPT_URL === "AQUI_PEGA_TU_URL") {
-                registros.push(nuevoRegistro);
-                actualizarCuadricula();
-                this.reset();
-                alert("Guardado en simulación local.");
-                return;
-            }
-
             loader.style.display = 'flex';
             fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(nuevoRegistro) })
             .then(res => res.json())
-            .then(response => {
-                if(response.status === "exito") {
-                    registros.push(nuevoRegistro);
-                    actualizarCuadricula();
-                    const currentFecha = document.getElementById("fechaRegistro").value;
-                    this.reset();
-                    document.getElementById("fechaRegistro").value = currentFecha;
-                    document.querySelector(`input[name="tipoProducto"][value="${tipoSeleccionado}"]`).checked = true;
-                    alert("Registro guardado exitosamente.");
-                } else {
-                    alert("Error: " + response.mensaje);
-                }
-            })
-            .catch(error => { console.error(error); })
-            .finally(() => { loader.style.display = 'none'; });
+            .then(() => {
+                registros.push(nuevoRegistro); actualizarCuadricula(); actualizarEstadisticasGlobales();
+                let f = document.getElementById("fechaRegistro").value; this.reset(); document.getElementById("fechaRegistro").value = f;
+            }).finally(() => loader.style.display = 'none');
         });
 
-        function renderHistorial() {
-            const tbody = document.querySelector("#tabla-historial tbody");
-            tbody.innerHTML = "";
-            const regsReversed = [...registros].reverse();
-            regsReversed.forEach(r => {
-                const tr = document.createElement("tr");
-                const badgeClass = r.tipoProducto === 'PT PAX' ? 'badge pax' : 'badge pt';
-                const tipoTexto = r.tipoProducto || 'PT';
-                const vueltaBadge = r.esSegundaVuelta ? `<span class="badge vuelta2">2da Vuelta</span>` : `1ra Vuelta`;
-
-                tr.innerHTML = `
-                    <td>${r.fecha}</td>
-                    <td><b>${r.sucursal}</b></td>
-                    <td><span class="${badgeClass}">${tipoTexto}</span></td>
-                    <td>${r.horaLlegada}</td>
-                    <td>${r.horaSalida}</td>
-                    <td>${r.chofer}</td>
-                    <td>${r.recibe}</td>
-                    <td>${vueltaBadge}</td>
-                `;
-                tbody.appendChild(tr);
-            });
+        // REGISTRO DE DIFERENCIAS (LOGICA MOTIVO)
+        function cargarProductosDropdown() {
+            const tipo = document.getElementById("inc-tipo").value;
+            const sel = document.getElementById("inc-producto");
+            sel.innerHTML = "<option value=''>-- Elige Producto --</option>";
+            productosDB.filter(p => p.tipo === tipo).forEach(p => sel.innerHTML += `<option value="${p.nombre}">${p.nombre} ($${p.precio})</option>`);
         }
 
-        function timeToMins(timeStr) {
-            if(!timeStr) return 0;
-            const parts = timeStr.split(':');
-            return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        function verificarEstadoMotivo() {
+            const estado = document.getElementById("inc-estado").value;
+            const divMotivo = document.getElementById("div-motivo");
+            const selectMotivo = document.getElementById("inc-motivo");
+            const colOrigen = document.getElementById("col-inc-origen");
+            const divJuliano = document.getElementById("div-juliano");
+            const inputJuliano = document.getElementById("inc-juliano");
+
+            // Si seleccionan "SE REGRESÓ" (Se regresó a planta)
+            if (estado === "SE REGRESÓ") {
+                divMotivo.style.display = "flex";    // Muestra la fila del motivo
+                colOrigen.style.display = "block";   // Muestra la pregunta de ¿Dónde se originó? (Vuelta/Tienda)
+                selectMotivo.required = true;        // Hace que sea obligatorio elegir motivo
+            } else {
+                // Si es "FALTÓ" o "LLEGÓ DE MÁS", ocultamos todo
+                divMotivo.style.display = "none";
+                colOrigen.style.display = "none";
+                selectMotivo.required = false;
+        
+                // Limpiamos los campos para no mandar datos fantasma a Google Sheets
+                selectMotivo.value = "";
+                document.getElementById("inc-origen").value = "En la vuelta"; 
+                if (divJuliano) divJuliano.style.display = "none";
+                if (inputJuliano) inputJuliano.value = "";
+            }
         }
-        function minsToTime(mins) {
-            const h = Math.floor(mins / 60); const m = Math.floor(mins % 60);
-            return String(h).padStart(2, '0') + ":" + String(m).padStart(2, '0');
+
+        function verificarJuliano() {
+            const motivo = document.getElementById("inc-motivo").value;
+            const divJul = document.getElementById("div-juliano");
+            const inpJul = document.getElementById("inc-juliano");
+            
+            if (motivo === "Juliano atrasado") {
+                divJul.style.display = "block";
+                inpJul.required = true;
+            } else {
+                divJul.style.display = "none";
+                inpJul.required = false;
+                inpJul.value = "";
+            }
         }
+
+        document.getElementById("incidencias-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const prodObj = productosDB.find(p => p.nombre === document.getElementById("inc-producto").value);
+            const nuevaInc = {
+                tipoRegistro: "INCIDENCIA", 
+                sucursal: document.getElementById("inc-sucursal").value, 
+                tipo: document.getElementById("inc-tipo").value,
+                producto: prodObj.nombre, 
+                precio: prodObj.precio, 
+                cantidad: parseInt(document.getElementById("inc-cantidad").value),
+                estado: document.getElementById("inc-estado").value,
+                motivo: document.getElementById("inc-motivo").value, 
+                juliano: document.getElementById("inc-juliano").value,
+                // NUEVO: Agregamos el origen solo si el estado es "SE REGRESÓ"
+                origen: document.getElementById("inc-estado").value === "SE REGRESÓ" ? document.getElementById("inc-origen").value : ""
+            };
+            
+            loader.style.display = 'flex';
+            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(nuevaInc) })
+            .then(res => res.json())
+            .then(res => {
+                if(res.status === "exito"){
+                    nuevaInc.fecha = getHoyStr(); 
+                    incidenciasLocales.push(nuevaInc);
+                    this.reset(); 
+                    document.getElementById("inc-tipo").value="PT"; 
+                    document.getElementById("inc-origen").value="En la vuelta"; // Reseteamos el select nuevo
+                    cargarProductosDropdown(); 
+                    verificarEstadoMotivo(); 
+                    renderStatsIncidencias(); 
+                    renderHistorialIncidencias();
+                } else alert("Error: " + res.mensaje);
+            }).finally(() => loader.style.display = 'none');
+        });
+
+        // HELPERS FILTROS
+        function pasaFiltroTiempo(fechaRegistro, tipoFiltro, valMes, valSemana) {
+            if(!fechaRegistro) return false;
+            if(tipoFiltro === "mes") return valMes && fechaRegistro.substring(0,7) === valMes;
+            if(tipoFiltro === "semana") return valSemana && getISOWeekString(fechaRegistro) === valSemana;
+            return false;
+        }
+
+        // ESTADISTICAS
+        function actualizarEstadisticasGlobales() { generarEstadisticas(); renderStatsIncidencias(); }
+
+        function toggleOrdenPromedios() { ordenPromediosAsc = !ordenPromediosAsc; generarEstadisticas(); }
+        function timeToMins(t) { if(!t || typeof t !== 'string') return 0; const p = t.split(':'); return parseInt(p[0])*60 + parseInt(p[1]); }
+        function minsToTime(m) { if(!m || isNaN(m)) return "-"; const h = Math.floor(m/60); const min = Math.floor(m%60); return String(h).padStart(2,'0')+":"+String(min).padStart(2,'0'); }
 
         function generarEstadisticas() {
-            const mesSeleccionado = document.getElementById("mes-stats").value; 
-            const supervisorFiltro = document.getElementById("supervisor-stats").value;
-            if(!mesSeleccionado) return;
+            const tipoT = document.getElementById("est-tipo-tiempo").value;
+            const mes = document.getElementById("est-mes").value;
+            const sem = document.getElementById("est-semana").value;
+            const sup = document.getElementById("est-sup").value;
+        
+            let sucFilt = sup === "TODOS" ? sucursales.slice() : sucursales.filter(s => s.supervisor === sup).slice();
 
-            // Filtramos las sucursales según el supervisor seleccionado
-            const sucursalesFiltradas = supervisorFiltro === "TODOS" 
-                ? sucursales 
-                : sucursales.filter(s => s.supervisor === supervisorFiltro);
+            // 1. FILTRADO (El colador)
+            const regs = registros.filter(r => {
+                if (!pasaFiltroTiempo(r.fecha, tipoT, mes, sem)) return false;
+                const esSegunda = (r.esSegundaVuelta === "Sí" || r.esSegundaVuelta === true);
+                if (esSegunda) return false;
+                if (!r.horaLlegada) return false;
+                return true;
+            });
 
-            // Filtramos 1ras vueltas del mes seleccionado
-            const regMesValidos = registros.filter(r => r.fecha && r.fecha.substring(0,7) === mesSeleccionado && !r.esSegundaVuelta);
+            // 2. CALCULO DE DATOS (Esta es la parte que te faltaba)
+            let datosSuc = sucFilt.map(s => {
+                const rPT = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT");
+                const rPAX = regs.filter(r => r.sucursal === s.id && r.tipoProducto === "PT PAX");
+                
+                const vPT = rPT.length > 0 ? (rPT.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPT.length) : 999999;
+                const vPAX = rPAX.length > 0 ? (rPAX.reduce((a, r) => a + timeToMins(r.horaLlegada), 0) / rPAX.length) : 999999;
+                
+                return { 
+                    ...s, 
+                    strPT: vPT !== 999999 ? minsToTime(vPT) : "-", 
+                    strPAX: vPAX !== 999999 ? minsToTime(vPAX) : "-" 
+                };
+            });
 
-            // Separar PT y PT PAX
-            const regMesPT = regMesValidos.filter(r => r.tipoProducto !== "PT PAX");
-            const regMesPAX = regMesValidos.filter(r => r.tipoProducto === "PT PAX");
+            // 3. ACTUALIZACIÓN DE GRÁFICAS
+            procesarGrafica(regs.filter(r => r.tipoProducto === "PT"), datosSuc, "graficaLlegadasPT", "PT", chartPT, (c) => chartPT = c);
+            procesarGrafica(regs.filter(r => r.tipoProducto === "PT PAX"), datosSuc, "graficaLlegadasPAX", "PAX", chartPAX, (c) => chartPAX = c);
 
-            // PROCESAR TABLAS Y GRÁFICAS (Pasando la lista filtrada)
-            procesarDatosEstadisticas(regMesPT, sucursalesFiltradas, "tabla-promedios-pt", "graficaLlegadasPT", "PT", chartPT, (nuevoChart) => chartPT = nuevoChart);
-            procesarDatosEstadisticas(regMesPAX, sucursalesFiltradas, "tabla-promedios-pax", "graficaLlegadasPAX", "PAX", chartPAX, (nuevoChart) => chartPAX = nuevoChart);
-
-            // FALTANTES (SOLO PARA PT)
-            calcularFaltantesPT(mesSeleccionado, regMesPT, sucursalesFiltradas);
+            // 4. ACTUALIZACIÓN DE TABLA
+            const tbody = document.querySelector("#tabla-promedios-llegada tbody");
+            tbody.innerHTML = "";
+            datosSuc.forEach(s => tbody.innerHTML += <tr><td><b>${s.id}</b></td><td>${s.strPT}</td><td>${s.strPAX}</td></tr>);
         }
 
-        function procesarDatosEstadisticas(registrosDatos, sucursalesList, idTabla, idCanvas, tipo, chartRef, updateChartRef) {
-            const stats = {};
-            sucursalesList.forEach(s => stats[s.id] = { totalMins: 0, count: 0 });
-
-            registrosDatos.forEach(r => {
-                if(stats[r.sucursal] && r.horaLlegada) {
-                    stats[r.sucursal].totalMins += timeToMins(r.horaLlegada);
-                    stats[r.sucursal].count++;
-                }
-            });
-
-            const tbody = document.querySelector(`#${idTabla} tbody`);
-            tbody.innerHTML = "";
-            let labelsChart = [];
-            let dataChart = [];
-
-            sucursalesList.forEach(s => {
-                const row = document.createElement("tr");
-                let timeTxt = '<span style="color:#999">Sin datos</span>';
-                if(stats[s.id].count > 0) {
-                    const prom = stats[s.id].totalMins / stats[s.id].count;
-                    timeTxt = `<b>${minsToTime(prom)}</b>`;
-                    labelsChart.push(s.id);
-                    dataChart.push((prom / 60).toFixed(2));
-                }
-                row.innerHTML = `<td>${s.id} - ${s.name}</td><td>${s.supervisor}</td><td>${timeTxt}</td>`;
-                tbody.appendChild(row);
-            });
-
-            const colorBg = tipo === "PAX" ? '#FF203B' : '#8BC34A';
-            const colorBorder = tipo === "PAX" ? '#B30018' : '#00763A';
+        function renderStatsIncidencias() {
+            const tipoT = document.getElementById("est-tipo-tiempo").value;
+            const mes = document.getElementById("est-mes").value;
+            const sem = document.getElementById("est-semana").value;
+            const fEdo = document.getElementById("filtro-inc-estado").value;
+            const fSuc = document.getElementById("filtro-inc-sucursal").value;
             
-            const ctx = document.getElementById(idCanvas).getContext('2d');
-            if(chartRef) chartRef.destroy();
-            
-            const nuevoGrafico = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labelsChart,
-                    datasets: [{ 
-                        label: `Hora Promedio ${tipo}`, 
-                        data: dataChart, 
-                        backgroundColor: colorBg, 
-                        borderColor: colorBorder, 
-                        borderWidth: 2, 
-                        borderRadius: 4 
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    scales: { 
-                        y: { 
-                            beginAtZero: false, 
-                            min: 5,
-                            ticks: {
-                                // Convierte el valor decimal del eje Y (ej. 8.5) a formato HH:MM (08:30)
-                                callback: function(value) {
-                                    const h = Math.floor(value);
-                                    const m = Math.round((value - h) * 60);
-                                    return String(h).padStart(2, '0') + ":" + String(m).padStart(2, '0');
-                                }
-                            }
-                        } 
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                // Convierte el valor decimal en el globo de información al pasar el mouse
-                                label: function(context) {
-                                    const value = context.parsed.y;
-                                    const h = Math.floor(value);
-                                    const m = Math.round((value - h) * 60);
-                                    return ' Promedio: ' + String(h).padStart(2, '0') + ":" + String(m).padStart(2, '0');
-                                }
-                            }
-                        }
-                    }
-                }
+            let arr = incidenciasLocales.filter(i => pasaFiltroTiempo(i.fecha, tipoT, mes, sem));
+            if(fEdo !== "TODOS") arr = arr.filter(i => i.estado === fEdo);
+            if(fSuc !== "TODAS") arr = arr.filter(i => i.sucursal === fSuc);
+
+            let tPT = 0, tPAX = 0, cProd = {};
+            arr.forEach(i => {
+                let v = i.cantidad * i.precio;
+                i.tipo === "PT PAX" ? tPAX += v : tPT += v;
+                if(!cProd[i.producto]) cProd[i.producto] = { cant: 0, valor: 0 };
+                cProd[i.producto].cant += i.cantidad; cProd[i.producto].valor += v;
             });
-            updateChartRef(nuevoGrafico);
 
-        function calcularFaltantesPT(mesStr, regMesValidos, sucursalesList) {
-            const [year, month] = mesStr.split('-').map(Number);
-            const contenedorFaltas = document.getElementById("lista-faltantes");
-            contenedorFaltas.innerHTML = "";
+            document.getElementById("total-dinero-pt").innerText = "$" + tPT.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById("total-dinero-pax").innerText = "$" + tPAX.toLocaleString('es-MX', {minimumFractionDigits: 2});
 
-            const hoy = new Date();
-            const esMesActual = (hoy.getFullYear() === year && (hoy.getMonth() + 1) === month);
-            let diasEnMes = new Date(year, month, 0).getDate();
-            let ultimoDiaRevision = esMesActual ? hoy.getDate() : diasEnMes;
-            let hayFaltas = false;
+            let top = Object.keys(cProd).map(k => ({ nombre: k, cant: cProd[k].cant, valor: cProd[k].valor })).sort((a,b) => b.cant - a.cant);
+            const tbody = document.querySelector("#tabla-top-productos tbody"); tbody.innerHTML = "";
+            top.slice(0,10).forEach(p => tbody.innerHTML += `<tr><td>${p.nombre}</td><td><b>${p.cant}</b></td><td class="money">$${p.valor.toLocaleString('es-MX')}</td></tr>`);
+        }
 
-            for(let d = 1; d <= ultimoDiaRevision; d++) {
-                const fechaCheck = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                // Solo revisamos los registros de las sucursales que estamos filtrando
-                const regDia = regMesValidos.filter(r => r.fecha === fechaCheck).map(r => r.sucursal);
-                const setRegDia = new Set(regDia);
+        // HISTORIAL VUELTAS
+        function filtrarSucursalesHistorial() {
+            const sup = document.getElementById("hist-sup").value;
+            const selSuc = document.getElementById("hist-suc");
+            selSuc.innerHTML = '<option value="TODAS">Todas</option>';
+            sucursales.filter(s => sup === "TODOS" || s.supervisor === sup).forEach(s => selSuc.innerHTML += `<option value="${s.id}">${s.id}</option>`);
+            renderHistorial();
+        }
 
-                // Si hay al menos un registro de forma global, contamos el día como "laborado"
-                const regGlobalesDia = registros.filter(r => r.fecha === fechaCheck && r.tipoProducto === "PT");
+        function renderHistorial() {
+            const tipoT = document.getElementById("hist-tipo-tiempo").value;
+            const mes = document.getElementById("hist-mes").value;
+            const sem = document.getElementById("hist-semana").value;
+            const suc = document.getElementById("hist-suc").value;
+            const sup = document.getElementById("hist-sup").value;
+            
+            const sucsSup = sup === "TODOS" ? null : sucursales.filter(s=>s.supervisor===sup).map(s=>s.id);
+
+            const tbody = document.querySelector("#tabla-historial tbody"); tbody.innerHTML = "";
+            [...registros].reverse().filter(r => {
+                if(!pasaFiltroTiempo(r.fecha, tipoT, mes, sem)) return false;
+                if(sucsSup && !sucsSup.includes(r.sucursal)) return false;
+                if(suc !== "TODAS" && r.sucursal !== suc) return false;
+                return true;
+            }).forEach(r => {
+                tbody.innerHTML += `<tr><td>${r.fecha}</td><td><b>${r.sucursal}</b></td><td><span class="${r.tipoProducto==='PT PAX'?'badge pax':'badge pt'}">${r.tipoProducto}</span></td><td>${r.horaLlegada}</td><td>${r.horaSalida}</td><td>${r.esSegundaVuelta?'2da':'1ra'}</td></tr>`;
+            });
+        }
+
+        // HISTORIAL INCIDENCIAS (NUEVO)
+        function filtrarSucursalesHInc() {
+            const sup = document.getElementById("hinc-sup").value;
+            const selSuc = document.getElementById("hinc-suc");
+            selSuc.innerHTML = '<option value="TODAS">Todas</option>';
+            sucursales.filter(s => sup === "TODOS" || s.supervisor === sup).forEach(s => selSuc.innerHTML += `<option value="${s.id}">${s.id}</option>`);
+            renderHistorialIncidencias();
+        }
+
+        function renderHistorialIncidencias() {
+            const tipoT = document.getElementById("hinc-tipo-tiempo").value;
+            const mes = document.getElementById("hinc-mes").value;
+            const sem = document.getElementById("hinc-semana").value;
+            const suc = document.getElementById("hinc-suc").value;
+            const sup = document.getElementById("hinc-sup").value;
+            
+            const sucsSup = sup === "TODOS" ? null : sucursales.filter(s=>s.supervisor===sup).map(s=>s.id);
+
+            const tbody = document.querySelector("#tabla-historial-incidencias tbody"); tbody.innerHTML = "";
+            [...incidenciasLocales].reverse().filter(r => {
+                if(!pasaFiltroTiempo(r.fecha, tipoT, mes, sem)) return false;
+                if(sucsSup && !sucsSup.includes(r.sucursal)) return false;
+                if(suc !== "TODAS" && r.sucursal !== suc) return false;
+                return true;
+            }).forEach(r => {
+                let badgeEdo = r.estado === 'SE REGRESÓ' ? 'badge pax' : (r.estado === 'FALTÓ' ? 'badge pt' : 'badge');
+                let extra = r.motivo ? `<span class="badge motivo">${r.motivo}</span>` : '';
+                if(r.juliano) extra += ` <small><b>Juliano:</b> ${r.juliano}</small>`;
                 
-                if(regGlobalesDia.length > 0) {
-                    let faltanHoy = [];
-                    sucursalesList.forEach(s => {
-                        if(!setRegDia.has(s.id)) faltanHoy.push(s.id);
-                    });
-
-                    if(faltanHoy.length > 0) {
-                        hayFaltas = true;
-                        const alertDiv = document.createElement("div");
-                        alertDiv.className = "alert";
-                        alertDiv.innerHTML = `<b>${fechaCheck}:</b> Faltó PT en:<br><span style="color:#d9534f">${faltanHoy.join(', ')}</span>`;
-                        contenedorFaltas.appendChild(alertDiv);
-                    }
-                }
-            }
-            if(!hayFaltas) contenedorFaltas.innerHTML = "<p style='color: green; font-weight:bold;'>¡Todo perfecto! No hay registros omitidos para este filtro.</p>";
+                tbody.innerHTML += `<tr>
+                    <td>${r.fecha}</td><td><b>${r.sucursal}</b></td><td>${r.tipo}</td>
+                    <td>${r.producto}</td><td><b>${r.cantidad}</b></td>
+                    <td><span class="${badgeEdo}">${r.estado}</span></td>
+                    <td>${extra}</td>
+                </tr>`;
+            });
         }
     </script>
 </body>
