@@ -269,7 +269,6 @@
                     <label style="color: var(--primary-dark);">Supervisor:</label>
                     <select id="est-sup" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
                         <option value="TODOS">Todos</option>
-                        <option value="ADRIANA">Adriana</option>
                         <option value="CITLALLI">Citlalli</option>
                         <option value="KARLA">Karla</option>
                         <option value="LEONARDO">Leonardo</option>
@@ -441,16 +440,15 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfOHb8bfrWnFs0YFZ4lvv4sl7Zi58ILr8mddHN627iZzLwP466TWnNsr_QmlT4kAct/exec"; // IMPORTANTE: Pegar el nuevo URL de tu Script
         
         const sucursales = [
-            { id: "ACA", name: "AVILA CAMACHO", supervisor: "ADRIANA" }, { id: "IND", name: "INDEPENDENCIA", supervisor: "ADRIANA" },
-            { id: "RCE", name: "REAL CENTER", supervisor: "ADRIANA" }, { id: "SIS", name: "SAN ISIDRO", supervisor: "ADRIANA" },
-            { id: "TES", name: "TESISTAN", supervisor: "ADRIANA" }, { id: "TET", name: "TETLAN", supervisor: "ADRIANA" },
-            { id: "TRA", name: "TRANSITO", supervisor: "ADRIANA" }, { id: "SLU", name: "SANTA LUCIA", supervisor: "ADRIANA" },
+            { id: "ACA", name: "AVILA CAMACHO", supervisor: "CITLALLI" }, { id: "IND", name: "INDEPENDENCIA", supervisor: "NOEMI" },
+            { id: "RCE", name: "REAL CENTER", supervisor: "CITLALLI" }, { id: "SIS", name: "SAN ISIDRO", supervisor: "CITLALLI" },
+            { id: "TES", name: "TESISTAN", supervisor: "KARLA" }, { id: "TET", name: "TETLAN", supervisor: "LEONARDO" },
+            { id: "TRA", name: "TRANSITO", supervisor: "NOEMI" }, { id: "SLU", name: "SANTA LUCIA", supervisor: "KARLA" },
             { id: "AME", name: "AMERICAS", supervisor: "CITLALLI" }, { id: "CHA", name: "CHAPULTEPEC", supervisor: "CITLALLI" },
             { id: "FED", name: "FEDERALTA", supervisor: "CITLALLI" }, { id: "LPA", name: "LA PAZ", supervisor: "CITLALLI" },
             { id: "OBL", name: "OBLATOS", supervisor: "CITLALLI" }, { id: "POR", name: "PUNTO ORIENTE", supervisor: "CITLALLI" },
             { id: "REV", name: "REVOLUCION", supervisor: "CITLALLI" }, { id: "TEC", name: "TECHNOLOGY", supervisor: "CITLALLI" },
             { id: "ALC", name: "ALCALDE", supervisor: "KARLA" }, { id: "COL", name: "COLON", supervisor: "KARLA" },
-            { id: "EIG", name: "EXPENDIO INGLATERRA", supervisor: "KARLA" }, { id: "ETE", name: "EXPENDIO TEPEYAC", supervisor: "KARLA" },
             { id: "GCO", name: "GOLFO DE CORTES", supervisor: "KARLA" }, { id: "GUA", name: "GUADALUPE", supervisor: "KARLA" },
             { id: "ING", name: "INGLATERRA", supervisor: "KARLA" }, { id: "JUA", name: "JUAREZ", supervisor: "KARLA" },
             { id: "NOB", name: "NIÑO OBRERO", supervisor: "KARLA" }, { id: "AER", name: "AEROPUERTO", supervisor: "LEONARDO" },
