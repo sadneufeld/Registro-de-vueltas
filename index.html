@@ -86,6 +86,7 @@
         .badge.pt { background: var(--primary); }
         .badge.pax { background: var(--pt-pax); }
         .badge.motivo { background: #E67E22; }
+        .badge.quedo { background: #3498DB; }
         
         .money { color: var(--primary-dark); font-weight: bold; }
         .top-card { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
@@ -100,7 +101,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.6</div>
+    <div class="version-tag">v1.1.7</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -199,6 +200,7 @@
                             <option value="FALTÓ">Faltó en ruta</option>
                             <option value="LLEGÓ DE MÁS">Llegó de más</option>
                             <option value="SE REGRESÓ">Se regresó a planta</option>
+                            <option value="SE QUEDÓ EN SUCURSAL">Se quedó en sucursal</option>
                         </select>
                     </div>
                 </div>
@@ -315,6 +317,7 @@
                             <option value="FALTÓ">Faltó en ruta</option>
                             <option value="LLEGÓ DE MÁS">Llegó de más</option>
                             <option value="SE REGRESÓ">Se regresó a planta</option>
+                            <option value="SE QUEDÓ EN SUCURSAL">Se quedó en sucursal</option>
                         </select>
                     </div>
                     <div class="form-col">
@@ -1040,9 +1043,15 @@
                 if(suc !== "TODAS" && r.sucursal !== suc) return false;
                 return true;
             }).forEach(r => {
-                let badgeEdo = r.estado === 'SE REGRESÓ' ? 'badge pax' : (r.estado === 'FALTÓ' ? 'badge pt' : 'badge');
+               let badgeEdo = 'badge';
+                if (r.estado === 'SE REGRESÓ') badgeEdo = 'badge pax';
+                else if (r.estado === 'FALTÓ') badgeEdo = 'badge pt';
+                else if (r.estado === 'SE QUEDÓ EN SUCURSAL') badgeEdo = 'badge quedo';
+                else badgeEdo = 'badge';
+                
                 let extra = r.motivo ? `<span class="badge motivo">${r.motivo}</span>` : '';
                 if(r.juliano) extra += ` <small><b>Juliano:</b> ${r.juliano}</small>`;
+                if(r.origen) extra += ` <small><b>Responsable:</b> ${r.origen}</small>`; 
                 
                 tbody.innerHTML += `<tr>
                     <td>${r.fecha}</td><td><b>${r.sucursal}</b></td><td>${r.tipo}</td>
