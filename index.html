@@ -101,7 +101,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.7</div>
+    <div class="version-tag">v1.1.8</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -170,6 +170,12 @@
         <div id="Incidencias" class="tab-content">
             <h2>Registro de Faltantes y Devoluciones</h2>
             <form id="incidencias-form" style="background: #fdfdfd; padding: 20px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 30px;">
+                <div class="form-row">
+                    <div class="form-col" style="max-width: 300px;">
+                        <label>Fecha del Movimiento:</label>
+                        <input type="date" id="inc-fecha" style="font-weight: bold; color: var(--primary);" required>
+                    </div>
+                </div>
                 <div class="form-row">
                     <div class="form-col">
                         <label>Sucursal:</label>
@@ -440,7 +446,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfOHb8bfrWnFs0YFZ4lvv4sl7Zi58ILr8mddHN627iZzLwP466TWnNsr_QmlT4kAct/exec"; // IMPORTANTE: Pegar el nuevo URL de tu Script
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4dZroXEdSZitdPW00mowz-4CjiHYffrZXC7KuW4S1w9tqp3VLjylUsEgq64g1U9fb/exec"; // IMPORTANTE: Pegar el nuevo URL de tu Script
         
         const sucursales = [
             { id: "ACA", name: "AVILA CAMACHO", supervisor: "CITLALLI" }, { id: "IND", name: "INDEPENDENCIA", supervisor: "NOEMI" },
@@ -699,6 +705,7 @@
         }
 
         window.onload = function() {
+            document.getElementById('inc-fecha').value = getHoyStr();
             document.getElementById('fechaRegistro').value = getHoyStr();
             document.getElementById('fechaRegistro').addEventListener('change', () => actualizarCuadricula());
 
@@ -838,13 +845,19 @@
         document.getElementById("incidencias-form").addEventListener("submit", function(e) {
             e.preventDefault();
             const prodObj = productosDB.find(p => p.nombre === document.getElementById("inc-producto").value);
+            
             const nuevaInc = {
-                tipoRegistro: "INCIDENCIA", sucursal: document.getElementById("inc-sucursal").value, tipo: document.getElementById("inc-tipo").value,
-                producto: prodObj.nombre, precio: prodObj.precio, cantidad: parseInt(document.getElementById("inc-cantidad").value),
+                tipoRegistro: "INCIDENCIA", 
+                fecha: document.getElementById("inc-fecha").value, // <--- AQUI MAPÉAS LA FECHA
+                sucursal: document.getElementById("inc-sucursal").value, 
+                tipo: document.getElementById("inc-tipo").value,
+                producto: prodObj.nombre, 
+                precio: prodObj.precio, 
+                cantidad: parseInt(document.getElementById("inc-cantidad").value),
                 estado: document.getElementById("inc-estado").value,
                 motivo: document.getElementById("inc-motivo").value, 
                 juliano: document.getElementById("inc-juliano").value,
-                origen: document.getElementById("origenIncidencia").value
+                origen: document.getElementById("inc-estado").value === "SE REGRESÓ" ? document.getElementById("origenIncidencia").value : ""
             };
             
             loader.style.display = 'flex';
@@ -852,8 +865,14 @@
             .then(res => res.json())
             .then(res => {
                 if(res.status === "exito"){
-                    nuevaInc.fecha = getHoyStr(); incidenciasLocales.push(nuevaInc);
-                    this.reset(); document.getElementById("inc-tipo").value="PT"; 
+                    // OJO: Ya borramos la línea que decía nuevaInc.fecha = getHoyStr(); porque ya viene en nuevaInc
+                    incidenciasLocales.push(nuevaInc);
+                    
+                    let fechaGuardada = document.getElementById("inc-fecha").value; // Guardamos la fecha antes de resetear
+                    this.reset(); 
+                    document.getElementById("inc-fecha").value = fechaGuardada; // Se queda la misma fecha seleccionada
+                    
+                    document.getElementById("inc-tipo").value="PT"; 
                     cargarProductosDropdown(); verificarEstadoMotivo(); renderStatsIncidencias(); renderHistorialIncidencias();
                 } else alert("Error: " + res.mensaje);
             }).finally(() => loader.style.display = 'none');
