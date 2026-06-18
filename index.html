@@ -1027,19 +1027,27 @@
             
             const sucsSup = sup === "TODOS" ? null : sucursales.filter(s=>s.supervisor===sup).map(s=>s.id);
 
-            const tbody = document.querySelector("#tabla-historial tbody"); tbody.innerHTML = "";
+            const tbody = document.querySelector("#tabla-historial tbody"); 
+            tbody.innerHTML = "";
+            
             [...registros].reverse().filter(r => {
                 if(!pasaFiltroTiempo(r.fecha, tipoT, mes, sem)) return false;
                 if(sucsSup && !sucsSup.includes(r.sucursal)) return false;
                 if(suc !== "TODAS" && r.sucursal !== suc) return false;
                 return true;
             }).forEach(r => {
-                }).forEach(r => {
-                // Le decimos que si hay hora la ponga, si no, que ponga --:--
+                // Aquí usamos la lógica para manejar horas en blanco
                 let llegadaTxt = r.horaLlegada ? r.horaLlegada : '--:--';
                 let salidaTxt = r.horaSalida ? r.horaSalida : '--:--';
                 
-                tbody.innerHTML += `<tr><td>${r.fecha}</td><td><b>${r.sucursal}</b></td><td><span class="${r.tipoProducto==='PT PAX'?'badge pax':'badge pt'}">${r.tipoProducto}</span></td><td>${llegadaTxt}</td><td>${salidaTxt}</td><td>${r.esSegundaVuelta?'2da':'1ra'}</td></tr>`;
+                tbody.innerHTML += `<tr>
+                    <td>${r.fecha}</td>
+                    <td><b>${r.sucursal}</b></td>
+                    <td><span class="${r.tipoProducto==='PT PAX'?'badge pax':'badge pt'}">${r.tipoProducto}</span></td>
+                    <td>${llegadaTxt}</td>
+                    <td>${salidaTxt}</td>
+                    <td>${r.esSegundaVuelta?'2da':'1ra'}</td>
+                </tr>`;
             });
         }
 
