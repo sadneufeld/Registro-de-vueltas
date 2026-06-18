@@ -102,7 +102,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.9</div>
+    <div class="version-tag">v1.2.0</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -152,8 +152,8 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-col"><label>Llegada:</label><input type="time" id="horaLlegada" required></div>
-                        <div class="form-col"><label>Salida:</label><input type="time" id="horaSalida" required></div>
+                        <div class="form-col"><label>Llegada:</label><input type="time" id="horaLlegada"></div>
+                        <div class="form-col"><label>Salida:</label><input type="time" id="horaSalida"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-col"><label>Chofer:</label><input type="text" id="chofer" required></div>
@@ -1034,7 +1034,12 @@
                 if(suc !== "TODAS" && r.sucursal !== suc) return false;
                 return true;
             }).forEach(r => {
-                tbody.innerHTML += `<tr><td>${r.fecha}</td><td><b>${r.sucursal}</b></td><td><span class="${r.tipoProducto==='PT PAX'?'badge pax':'badge pt'}">${r.tipoProducto}</span></td><td>${r.horaLlegada}</td><td>${r.horaSalida}</td><td>${r.esSegundaVuelta?'2da':'1ra'}</td></tr>`;
+                }).forEach(r => {
+                // Le decimos que si hay hora la ponga, si no, que ponga --:--
+                let llegadaTxt = r.horaLlegada ? r.horaLlegada : '--:--';
+                let salidaTxt = r.horaSalida ? r.horaSalida : '--:--';
+                
+                tbody.innerHTML += `<tr><td>${r.fecha}</td><td><b>${r.sucursal}</b></td><td><span class="${r.tipoProducto==='PT PAX'?'badge pax':'badge pt'}">${r.tipoProducto}</span></td><td>${llegadaTxt}</td><td>${salidaTxt}</td><td>${r.esSegundaVuelta?'2da':'1ra'}</td></tr>`;
             });
         }
 
