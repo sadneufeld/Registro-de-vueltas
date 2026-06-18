@@ -88,6 +88,9 @@
         .badge.motivo { background: #E67E22; }
         .badge.quedo { background: #3498DB; }
         .badge.extra { background: #9B59B6; }
+        .badge.pax { background: #FF203B; color: white; }
+        .badge.quedo { background: #3498DB; color: white; }
+        .badge.motivo { background: #ECF0F1; color: #2C3E50; border: 1px solid #BDC3C7; }
         
         .money { color: var(--primary-dark); font-weight: bold; }
         .top-card { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
@@ -102,7 +105,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.2.0</div>
+    <div class="version-tag">v1.2.1</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -798,36 +801,41 @@
 
         function verificarEstadoMotivo() {
             const estado = document.getElementById("inc-estado").value;
-            
-            // Elementos del Motivo
             const divMotivo = document.getElementById("div-motivo");
-            const selMotivo = document.getElementById("inc-motivo");
-            
-            // Elementos del Responsable (NUEVO)
-            const divOrigen = document.getElementById("div-origen"); 
-            const selOrigen = document.getElementById("origenIncidencia"); 
-            
-            if (estado === "SE REGRESÓ") {
-                // Muestra el motivo
+            const selectMotivo = document.getElementById("inc-motivo");
+    
+            // Opciones para "Se quedó en sucursal"
+            const motivosSucursal = [
+                "Se queda tal cual en sucursal",
+                "Se repara en sucursal",
+                "Se rebana"
+            ];
+    
+            // Tus opciones originales de devolución
+            const motivosDevolucion = [
+                "Contaminado con líquido", "Contaminado con morusas de otro pastel", "Desmontado", 
+                "Sin sello / etiqueta", "Craquelado", "Ponchado", "Charola abierta", 
+                "Juliano atrasado", "Cubierta dañada", "Falta cubierta", "Tiene un insecto",
+                "En mal estado", "Con cabello", "Con moho", "Con plástico", 
+                "Fruta en mal estado", "Lateral dañado", "Domo roto", "Quebradas"
+            ];
+
+            if (estado === "SE REGRESÓ" || estado === "SE QUEDÓ EN SUCURSAL") {
                 divMotivo.style.display = "flex";
-                selMotivo.required = true;
-                
-                // Muestra el responsable (NUEVO)
-                divOrigen.style.display = "flex"; 
-                selOrigen.required = true;        
+        
+                // Limpiamos y llenamos según el estado
+                selectMotivo.innerHTML = '<option value="">-- Selecciona Motivo --</option>';
+                const lista = (estado === "SE QUEDÓ EN SUCURSAL") ? motivosSucursal : motivosDevolucion;
+        
+                lista.forEach(m => {
+                    selectMotivo.innerHTML += `<option value="${m}">${m}</option>`;
+                });
             } else {
-                // Oculta el motivo
                 divMotivo.style.display = "none";
-                selMotivo.required = false;
-                selMotivo.value = "";
-                
-                // Oculta el responsable y limpia el campo (NUEVO)
-                divOrigen.style.display = "none"; 
-                selOrigen.required = false;
-                selOrigen.value = "";             
-                
-                verificarJuliano(); 
+                selectMotivo.value = "";
             }
+    
+            verificarJuliano(); 
         }
 
         function verificarJuliano() {
@@ -1078,20 +1086,24 @@
                 if(suc !== "TODAS" && r.sucursal !== suc) return false;
                 return true;
             }).forEach(r => {
-               let badgeEdo = 'badge';
+                // Lógica de colores según el estado
+                let badgeEdo = 'badge';
                 if (r.estado === 'SE REGRESÓ') badgeEdo = 'badge pax';
-                else if (r.estado === 'FALTÓ') badgeEdo = 'badge pt';
                 else if (r.estado === 'SE QUEDÓ EN SUCURSAL') badgeEdo = 'badge quedo';
-                else if (r.estado === 'LLEGÓ DE MÁS') badgeEdo = 'badge extra';
-                else badgeEdo = 'badge';
-                
+                else badgeEdo = 'badge'; // Para FALTÓ, LLEGÓ DE MÁS, etc.
+
+                // Construcción de detalles extras (Motivo, Juliano, Origen)
                 let extra = r.motivo ? `<span class="badge motivo">${r.motivo}</span>` : '';
                 if(r.juliano) extra += ` <small><b>Juliano:</b> ${r.juliano}</small>`;
-                if(r.origen) extra += ` <small><b>Responsable:</b> ${r.origen}</small>`; 
-                
+                if(r.origen) extra += ` <small><b>Responsable:</b> ${r.origen}</small>`;
+
+                // Insertamos la fila con los nuevos estilos
                 tbody.innerHTML += `<tr>
-                    <td>${r.fecha}</td><td><b>${r.sucursal}</b></td><td>${r.tipo}</td>
-                    <td>${r.producto}</td><td><b>${r.cantidad}</b></td>
+                    <td>${r.fecha}</td>
+                    <td><b>${r.sucursal}</b></td>
+                    <td>${r.tipo}</td>
+                    <td>${r.producto}</td>
+                    <td><b>${r.cantidad}</b></td>
                     <td><span class="${badgeEdo}">${r.estado}</span></td>
                     <td>${extra}</td>
                 </tr>`;
