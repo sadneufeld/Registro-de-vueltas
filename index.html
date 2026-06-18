@@ -105,7 +105,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.2.2</div>
+    <div class="version-tag">v1.2.3</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -215,13 +215,13 @@
                     </div>
                 </div>
 
-                <div class="form-row" id="div-motivo" style="display: none;">
+               <div class="form-row" id="div-motivo" style="display: none;">
                     <div class="form-col">
                         <label>Motivo de Devolución:</label>
                         <select id="inc-motivo" onchange="verificarJuliano()">
                             <option value="">-- Selecciona Motivo --</option>
                             <option value="Contaminado con líquido">Contaminado con líquido</option>
-                            <option value="Contaminado con morusas de otro pastel">Contaminado con morusas de otro pastel</option>
+                            <option value="Contaminado con morusas">Contaminado con morusas</option>
                             <option value="Desmontado">Desmontado</option>
                             <option value="Sin sello / etiqueta">Sin sello / etiqueta</option>
                             <option value="Craquelado">Craquelado</option>
@@ -241,14 +241,13 @@
                             <option value="Quebradas">Quebradas</option>
                         </select>
                     </div>
+
                     <div class="form-col" id="div-juliano" style="display: none;">
                         <label>Número de Juliano:</label>
                         <input type="text" id="inc-juliano" placeholder="Ingresar Juliano">
                     </div>
-                </div>
 
-                <div class="form-row" id="div-origen" style="display: none;">
-                    <div class="form-col">
+                    <div class="form-col" id="div-origen" style="display: none;">
                         <label>Responsable:</label>
                         <select id="origenIncidencia">
                             <option value="">-- Selecciona quién fue responsable --</option>
@@ -258,55 +257,21 @@
                     </div>
                 </div>
 
+                <div class="form-row" id="div-accion-sucursal" style="display: none;">
+                    <div class="form-col">
+                        <label>Acción tomada en sucursal:</label>
+                        <select id="inc-accion">
+                            <option value="">-- Selecciona Acción --</option>
+                            <option value="Se quedó tal cual en sucursal">Se quedó tal cual en sucursal</option>
+                            <option value="Se reparó en sucursal">Se reparó en sucursal</option>
+                            <option value="Se rebanó en sucursal">Se rebanó en sucursal</option>
+                        </select>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn-submit" style="background: var(--text-dark);">Registrar Movimiento</button>
             </form>
         </div>
-
-        <div id="Estadisticas" class="tab-content">
-            
-            <div class="form-row filter-panel">
-                <div class="form-col" style="max-width: 250px;">
-                    <label style="color: var(--primary-dark);">Filtrar por:</label>
-                    <select id="est-tipo-tiempo" onchange="toggleTiempoEstadisticas()" style="font-weight: bold;">
-                        <option value="mes">Mes</option>
-                        <option value="semana">Semana</option>
-                    </select>
-                </div>
-                <div class="form-col" style="max-width: 250px;">
-                    <label style="color: var(--primary-dark);">Rango de Tiempo:</label>
-                    <input type="month" id="est-mes" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
-                    <input type="week" id="est-semana" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold; display: none;">
-                </div>
-                <div class="form-col" style="max-width: 300px;">
-                    <label style="color: var(--primary-dark);">Supervisor:</label>
-                    <select id="est-sup" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
-                        <option value="TODOS">Todos</option>
-                        <option value="CITLALLI">Citlalli</option>
-                        <option value="KARLA">Karla</option>
-                        <option value="LEONARDO">Leonardo</option>
-                        <option value="NOEMI">Noemí</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="sub-tabs">
-                <button class="sub-tab active" onclick="openSubTab(event, 'SubEst-Promedio')">Promedio de llegada</button>
-                <button class="sub-tab" onclick="openSubTab(event, 'SubEst-Tiempos')">Análisis de tiempos</button>
-                <button class="sub-tab" onclick="openSubTab(event, 'SubEst-Movimientos')">Estadísticas de diferencias</button>
-            </div>
-
-            <div id="SubEst-Promedio" class="sub-tab-content active">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <h2 style="margin: 0;">Promedio de Llegada por Sucursal</h2>
-                    <button class="btn-sort" onclick="toggleOrdenPromedios()">Alternar Orden de Llegada ⇅</button>
-                </div>
-                <div class="table-responsive" style="margin-bottom: 30px;">
-                    <table id="tabla-promedios-llegada">
-                        <thead><tr><th>Sucursal</th><th>Promedio PT</th><th>Promedio PT PAX</th></tr></thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
 
             <div id="SubEst-Tiempos" class="sub-tab-content">
                 <h2>Análisis de Tiempos de Llegada</h2>
@@ -450,7 +415,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4dZroXEdSZitdPW00mowz-4CjiHYffrZXC7KuW4S1w9tqp3VLjylUsEgq64g1U9fb/exec"; // IMPORTANTE: Pegar el nuevo URL de tu Script
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytQ-YecqnZWMwahYtyJMVJs571Orx95CWNUvq54b7A1LNqe_NfofOuYuDrD2vdczz5/exec"; // IMPORTANTE: Pegar el nuevo URL de tu Script
         
         const sucursales = [
             { id: "ACA", name: "AVILA CAMACHO", supervisor: "CITLALLI" }, { id: "IND", name: "INDEPENDENCIA", supervisor: "NOEMI" },
@@ -803,17 +768,19 @@
             const estado = document.getElementById("inc-estado").value;
             const divMotivo = document.getElementById("div-motivo");
             const selectMotivo = document.getElementById("inc-motivo");
+            const divAccion = document.getElementById("div-accion-sucursal");
+            const selectAccion = document.getElementById("inc-accion");
     
-            // Lista UNIFICADA para ambos
+            // Lista UNIFICADA de motivos (quitamos "Se repara" y "Se rebana" de aquí porque ya tienen su propia lista)
             const motivos = [
                 "Contaminado con líquido", "Contaminado con morusas", "Desmontado", 
                 "Sin sello / etiqueta", "Craquelado", "Ponchado", "Charola abierta", 
                 "Juliano atrasado", "Cubierta dañada", "Falta cubierta", "Tiene un insecto",
                 "En mal estado", "Con cabello", "Con moho", "Con plástico", 
-                "Fruta en mal estado", "Lateral dañado", "Domo roto", "Quebradas",
-                "Se repara", "Se rebana"
+                "Fruta en mal estado", "Lateral dañado", "Domo roto", "Quebradas"
             ];
 
+            // Control de la sección de Motivos
             if (estado === "SE REGRESÓ" || estado === "SE QUEDÓ EN SUCURSAL") {
                 divMotivo.style.display = "flex";
                 selectMotivo.innerHTML = '<option value="">-- Selecciona Motivo --</option>';
@@ -824,6 +791,17 @@
                 divMotivo.style.display = "none";
                 selectMotivo.value = "";
             }
+
+            // CONTROL NUEVO: Mostrar acciones solo si se queda en sucursal
+            if (estado === "SE QUEDÓ EN SUCURSAL") {
+                divAccion.style.display = "flex";
+                selectAccion.required = true; // Volverlo obligatorio
+            } else {
+                divAccion.style.display = "none";
+                selectAccion.value = "";
+                selectAccion.required = false;
+            }
+    
             verificarJuliano();
         }
 
@@ -848,7 +826,7 @@
             
             const nuevaInc = {
                 tipoRegistro: "INCIDENCIA", 
-                fecha: document.getElementById("inc-fecha").value, // <--- AQUI MAPÉAS LA FECHA
+                fecha: document.getElementById("inc-fecha").value, 
                 sucursal: document.getElementById("inc-sucursal").value, 
                 tipo: document.getElementById("inc-tipo").value,
                 producto: prodObj.nombre, 
@@ -857,7 +835,8 @@
                 estado: document.getElementById("inc-estado").value,
                 motivo: document.getElementById("inc-motivo").value, 
                 juliano: document.getElementById("inc-juliano").value,
-                origen: document.getElementById("inc-estado").value === "SE REGRESÓ" ? document.getElementById("origenIncidencia").value : ""
+                origen: document.getElementById("inc-estado").value === "SE REGRESÓ" ? document.getElementById("inc-origen").value : "",
+                accion: document.getElementById("inc-estado").value === "SE QUEDÓ EN SUCURSAL" ? document.getElementById("inc-accion").value : ""
             };
             
             loader.style.display = 'flex';
@@ -1085,6 +1064,7 @@
                 let extra = r.motivo ? `<span class="badge motivo">${r.motivo}</span>` : '';
                 if(r.juliano) extra += ` <small><b>Juliano:</b> ${r.juliano}</small>`;
                 if(r.origen) extra += ` <small><b>Responsable:</b> ${r.origen}</small>`;
+                if(r.accion) extra += ` <small><b>Acción:</b> ${r.accion}</small>`;
 
                 // Insertamos la fila con los nuevos estilos
                 tbody.innerHTML += `<tr>
