@@ -105,7 +105,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.2.1</div>
+    <div class="version-tag">v1.2.2</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -804,38 +804,27 @@
             const divMotivo = document.getElementById("div-motivo");
             const selectMotivo = document.getElementById("inc-motivo");
     
-            // Opciones para "Se quedó en sucursal"
-            const motivosSucursal = [
-                "Se queda tal cual en sucursal",
-                "Se repara en sucursal",
-                "Se rebana"
-            ];
-    
-            // Tus opciones originales de devolución
-            const motivosDevolucion = [
-                "Contaminado con líquido", "Contaminado con morusas de otro pastel", "Desmontado", 
+            // Lista UNIFICADA para ambos
+            const motivos = [
+                "Contaminado con líquido", "Contaminado con morusas", "Desmontado", 
                 "Sin sello / etiqueta", "Craquelado", "Ponchado", "Charola abierta", 
                 "Juliano atrasado", "Cubierta dañada", "Falta cubierta", "Tiene un insecto",
                 "En mal estado", "Con cabello", "Con moho", "Con plástico", 
-                "Fruta en mal estado", "Lateral dañado", "Domo roto", "Quebradas"
+                "Fruta en mal estado", "Lateral dañado", "Domo roto", "Quebradas",
+                "Se repara", "Se rebana"
             ];
 
             if (estado === "SE REGRESÓ" || estado === "SE QUEDÓ EN SUCURSAL") {
                 divMotivo.style.display = "flex";
-        
-                // Limpiamos y llenamos según el estado
                 selectMotivo.innerHTML = '<option value="">-- Selecciona Motivo --</option>';
-                const lista = (estado === "SE QUEDÓ EN SUCURSAL") ? motivosSucursal : motivosDevolucion;
-        
-                lista.forEach(m => {
+                motivos.forEach(m => {
                     selectMotivo.innerHTML += `<option value="${m}">${m}</option>`;
                 });
             } else {
                 divMotivo.style.display = "none";
                 selectMotivo.value = "";
             }
-    
-            verificarJuliano(); 
+            verificarJuliano();
         }
 
         function verificarJuliano() {
