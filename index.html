@@ -87,6 +87,7 @@
         .badge.pax { background: var(--pt-pax); }
         .badge.motivo { background: #E67E22; }
         .badge.quedo { background: #3498DB; }
+        .badge.extra { background: #9B59B6; }
         
         .money { color: var(--primary-dark); font-weight: bold; }
         .top-card { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
@@ -101,7 +102,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.1.8</div>
+    <div class="version-tag">v1.1.9</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -1066,6 +1067,7 @@
                 if (r.estado === 'SE REGRESÓ') badgeEdo = 'badge pax';
                 else if (r.estado === 'FALTÓ') badgeEdo = 'badge pt';
                 else if (r.estado === 'SE QUEDÓ EN SUCURSAL') badgeEdo = 'badge quedo';
+                else if (r.estado === 'LLEGÓ DE MÁS') badgeEdo = 'badge extra';
                 else badgeEdo = 'badge';
                 
                 let extra = r.motivo ? `<span class="badge motivo">${r.motivo}</span>` : '';
