@@ -273,6 +273,52 @@
             </form>
         </div>
 
+        <div id="Estadisticas" class="tab-content">
+            
+            <div class="form-row filter-panel">
+                <div class="form-col" style="max-width: 250px;">
+                    <label style="color: var(--primary-dark);">Filtrar por:</label>
+                    <select id="est-tipo-tiempo" onchange="toggleTiempoEstadisticas()" style="font-weight: bold;">
+                        <option value="mes">Mes</option>
+                        <option value="semana">Semana</option>
+                    </select>
+                </div>
+                <div class="form-col" style="max-width: 250px;">
+                    <label style="color: var(--primary-dark);">Rango de Tiempo:</label>
+                    <input type="month" id="est-mes" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
+                    <input type="week" id="est-semana" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold; display: none;">
+                </div>
+                <div class="form-col" style="max-width: 300px;">
+                    <label style="color: var(--primary-dark);">Supervisor:</label>
+                    <select id="est-sup" onchange="actualizarEstadisticasGlobales()" style="font-weight: bold;">
+                        <option value="TODOS">Todos</option>
+                        <option value="CITLALLI">Citlalli</option>
+                        <option value="KARLA">Karla</option>
+                        <option value="LEONARDO">Leonardo</option>
+                        <option value="NOEMI">Noemí</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sub-tabs">
+                <button class="sub-tab active" onclick="openSubTab(event, 'SubEst-Promedio')">Promedio de llegada</button>
+                <button class="sub-tab" onclick="openSubTab(event, 'SubEst-Tiempos')">Análisis de tiempos</button>
+                <button class="sub-tab" onclick="openSubTab(event, 'SubEst-Movimientos')">Estadísticas de diferencias</button>
+            </div>
+
+            <div id="SubEst-Promedio" class="sub-tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h2 style="margin: 0;">Promedio de Llegada por Sucursal</h2>
+                    <button class="btn-sort" onclick="toggleOrdenPromedios()">Alternar Orden de Llegada ⇅</button>
+                </div>
+                <div class="table-responsive" style="margin-bottom: 30px;">
+                    <table id="tabla-promedios-llegada">
+                        <thead><tr><th>Sucursal</th><th>Promedio PT</th><th>Promedio PT PAX</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
             <div id="SubEst-Tiempos" class="sub-tab-content">
                 <h2>Análisis de Tiempos de Llegada</h2>
                 <h3 style="color: var(--primary);">Promedios PT (Regular)</h3>
