@@ -816,8 +816,11 @@
             const selectMotivo = document.getElementById("inc-motivo");
             const divAccion = document.getElementById("div-accion-sucursal");
             const selectAccion = document.getElementById("inc-accion");
+            
+            // NUEVO: Variables para controlar el responsable
+            const divOrigen = document.getElementById("div-origen");
+            const selectOrigen = document.getElementById("origenIncidencia");
     
-            // Lista UNIFICADA de motivos (quitamos "Se repara" y "Se rebana" de aquí porque ya tienen su propia lista)
             const motivos = [
                 "Contaminado con líquido", "Contaminado con morusas", "Desmontado", 
                 "Sin sello / etiqueta", "Craquelado", "Ponchado", "Charola abierta", 
@@ -826,7 +829,7 @@
                 "Fruta en mal estado", "Lateral dañado", "Domo roto", "Quebradas"
             ];
 
-            // Control de la sección de Motivos
+            // 1. Control general de la sección de Motivos
             if (estado === "SE REGRESÓ" || estado === "SE QUEDÓ EN SUCURSAL") {
                 divMotivo.style.display = "flex";
                 selectMotivo.innerHTML = '<option value="">-- Selecciona Motivo --</option>';
@@ -838,10 +841,20 @@
                 selectMotivo.value = "";
             }
 
-            // CONTROL NUEVO: Mostrar acciones solo si se queda en sucursal
+            // 2. Control del Responsable: Mostrar SOLO si se regresó a planta
+            if (estado === "SE REGRESÓ") {
+                divOrigen.style.display = "block";
+                selectOrigen.required = true;
+            } else {
+                divOrigen.style.display = "none";
+                selectOrigen.value = "";
+                selectOrigen.required = false;
+            }
+
+            // 3. Control de Acciones: Mostrar SOLO si se queda en sucursal
             if (estado === "SE QUEDÓ EN SUCURSAL") {
                 divAccion.style.display = "flex";
-                selectAccion.required = true; // Volverlo obligatorio
+                selectAccion.required = true;
             } else {
                 divAccion.style.display = "none";
                 selectAccion.value = "";
