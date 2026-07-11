@@ -985,14 +985,11 @@
             procesarGrafica(regs.filter(r=>r.tipoProducto!=="PT PAX"), datosSuc, "graficaLlegadasPT", "PT", chartPT, (c)=>chartPT=c);
             procesarGrafica(regs.filter(r=>r.tipoProducto==="PT PAX"), datosSuc, "graficaLlegadasPAX", "PAX", chartPAX, (c)=>chartPAX=c);
 
+            // Llenamos la tabla de promedios (UNA SOLA VEZ)
             const tbody = document.querySelector("#tabla-promedios-llegada tbody");
             tbody.innerHTML = "";
             datosSuc.forEach(s => tbody.innerHTML += `<tr><td><b>${s.id}</b></td><td>${s.strPT}</td><td>${s.strPAX}</td></tr>`);
-
-            const tbody = document.querySelector("#tabla-promedios-llegada tbody");
-            tbody.innerHTML = "";
-            datosSuc.forEach(s => tbody.innerHTML += `<tr><td><b>${s.id}</b></td><td>${s.strPT}</td><td>${s.strPAX}</td></tr>`);
-
+        
             // =========================================================
             // NUEVA LÓGICA: Llenar la tabla de llegadas diarias
             // =========================================================
@@ -1002,7 +999,7 @@
 
             const theadDiario = document.querySelector("#tabla-llegadas-diarias thead");
             const tbodyDiario = document.querySelector("#tabla-llegadas-diarias tbody");
-
+        
             // 2. Construir los encabezados (Columnas de fechas)
             let trHead = `<tr><th style="position: sticky; left: 0; background-color: var(--primary); z-index: 2;">Sucursal</th>`;
             fechasUnicas.forEach(f => {
@@ -1012,16 +1009,16 @@
             });
             trHead += `</tr>`;
             theadDiario.innerHTML = trHead;
-    
+
             // 3. Construir las filas (Sucursales y sus horas de llegada por fecha)
             tbodyDiario.innerHTML = "";
             datosSuc.forEach(s => {
-            let trBody = `<tr><td style="position: sticky; left: 0; background-color: var(--white); z-index: 1; border-right: 2px solid var(--border-color);"><b>${s.id}</b></td>`;
-            
+                let trBody = `<tr><td style="position: sticky; left: 0; background-color: var(--white); z-index: 1; border-right: 2px solid var(--border-color);"><b>${s.id}</b></td>`;
+                
                 fechasUnicas.forEach(f => {
                     // Buscar registros de esta sucursal, en esta fecha, que sean 1ra vuelta (!esSegundaVuelta)
                     const llegadasDia = regs.filter(r => r.sucursal === s.id && r.fecha === f && r.horaLlegada);
-                
+            
                     if (llegadasDia.length > 0) {
                         // Si hubo PT y PT PAX en la 1ra vuelta el mismo día, tomamos la hora más temprana
                         const horaMinimaEnMinutos = Math.min(...llegadasDia.map(r => timeToMins(r.horaLlegada)));
@@ -1030,7 +1027,7 @@
                         trBody += `<td style="color: #ccc;">-</td>`; // No hubo registro ese día
                     }
                 });
-            
+        
                 trBody += `</tr>`;
                 tbodyDiario.innerHTML += trBody;
             });
