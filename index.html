@@ -105,7 +105,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.2.3</div>
+    <div class="version-tag">v1.2.4</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -307,6 +307,7 @@
             </div>
 
             <div id="SubEst-Promedio" class="sub-tab-content active">
+                <!-- Tabla Original de Promedios -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <h2 style="margin: 0;">Promedio de Llegada por Sucursal</h2>
                     <button class="btn-sort" onclick="toggleOrdenPromedios()">Alternar Orden de Llegada ⇅</button>
@@ -315,6 +316,22 @@
                     <table id="tabla-promedios-llegada">
                         <thead><tr><th>Sucursal</th><th>Promedio PT</th><th>Promedio PT PAX</th></tr></thead>
                         <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- NUEVA SECCIÓN: Detalle Diario de Llegadas -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 40px; border-top: 2px solid var(--border-color); padding-top: 20px;">
+                    <h2 style="margin: 0; color: var(--primary-dark);">Detalle Diario de Llegada (1ra Vuelta)</h2>
+                </div>
+                <p style="font-size: 13px; color: #666; margin-top: 0px;">* Muestra la hora de la primera vuelta registrada en los días del marco temporal seleccionado.</p>
+                <div class="table-responsive" style="margin-bottom: 30px; max-height: 500px; overflow-y: auto;">
+                    <table id="tabla-llegadas-diarias">
+                        <thead>
+                            <!-- Las fechas se insertarán aquí dinámicamente -->
+                        </thead>
+                        <tbody>
+                            <!-- Las sucursales y horas se insertarán aquí dinámicamente -->
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -971,7 +988,54 @@
             const tbody = document.querySelector("#tabla-promedios-llegada tbody");
             tbody.innerHTML = "";
             datosSuc.forEach(s => tbody.innerHTML += `<tr><td><b>${s.id}</b></td><td>${s.strPT}</td><td>${s.strPAX}</td></tr>`);
+
+            const tbody = document.querySelector("#tabla-promedios-llegada tbody");
+            tbody.innerHTML = "";
+            datosSuc.forEach(s => tbody.innerHTML += `<tr><td><b>${s.id}</b></td><td>${s.strPT}</td><td>${s.strPAX}</td></tr>`);
+
+            // =========================================================
+            // NUEVA LÓGICA: Llenar la tabla de llegadas diarias
+            // =========================================================
+        
+            // 1. Extraer todas las fechas únicas dentro de los registros filtrados y ordenarlas
+            const fechasUnicas = [...new Set(regs.map(r => r.fecha))].sort();
+
+            const theadDiario = document.querySelector("#tabla-llegadas-diarias thead");
+            const tbodyDiario = document.querySelector("#tabla-llegadas-diarias tbody");
+
+            // 2. Construir los encabezados (Columnas de fechas)
+            let trHead = `<tr><th style="position: sticky; left: 0; background-color: var(--primary); z-index: 2;">Sucursal</th>`;
+            fechasUnicas.forEach(f => {
+                const partes = f.split('-'); // f es formato YYYY-MM-DD
+                const diaMes = `${partes[2]}/${partes[1]}`; // Formato DD/MM
+                trHead += `<th>${diaMes}</th>`;
+            });
+            trHead += `</tr>`;
+            theadDiario.innerHTML = trHead;
+    
+            // 3. Construir las filas (Sucursales y sus horas de llegada por fecha)
+            tbodyDiario.innerHTML = "";
+            datosSuc.forEach(s => {
+            let trBody = `<tr><td style="position: sticky; left: 0; background-color: var(--white); z-index: 1; border-right: 2px solid var(--border-color);"><b>${s.id}</b></td>`;
+            
+                fechasUnicas.forEach(f => {
+                    // Buscar registros de esta sucursal, en esta fecha, que sean 1ra vuelta (!esSegundaVuelta)
+                    const llegadasDia = regs.filter(r => r.sucursal === s.id && r.fecha === f && r.horaLlegada);
+                
+                    if (llegadasDia.length > 0) {
+                        // Si hubo PT y PT PAX en la 1ra vuelta el mismo día, tomamos la hora más temprana
+                        const horaMinimaEnMinutos = Math.min(...llegadasDia.map(r => timeToMins(r.horaLlegada)));
+                        trBody += `<td>${minsToTime(horaMinimaEnMinutos)}</td>`;
+                    } else {
+                        trBody += `<td style="color: #ccc;">-</td>`; // No hubo registro ese día
+                    }
+                });
+            
+                trBody += `</tr>`;
+                tbodyDiario.innerHTML += trBody;
+            });
         }
+        
 
         function procesarGrafica(datos, sucList, idCanvas, tipo, chartRef, updateChartRef) {
             let labelsChart = [], dataChart = [];
