@@ -105,7 +105,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.2.4</div>
+    <div class="version-tag">v1.2.5</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -364,7 +364,7 @@
                             <option value="TODAS">Todas las Sucursales</option>
                         </select>
                     </div>
-                    <div class="form-col">
+                    <div class="form-col" id="contenedor-filtro-responsable" style="display: none;">
                         <label>Filtrar por Responsable:</label>
                         <select id="filtro-inc-origen" onchange="renderStatsIncidencias()">
                             <option value="TODOS">Todos</option>
@@ -392,10 +392,12 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-row" style="margin-top: 30px; margin-bottom: 30px;">
-                            <div class="form-col" style="width: 100%;">
-                                <h3 style="color: #E67E22; border-bottom: 2px solid #eee; padding-bottom: 10px;">Motivos de Regreso a Planta</h3>
+            
+                            <div class="form-col" id="contenedor-grafica-motivos" style="width: 100%; display: none;">
+                                <h3 style="color: #E67E22; border-bottom: 2px solid #eee; padding-bottom: 10px;">Motivos de Regreso y Sucursal</h3>
                                 <canvas id="graficaMotivos" height="100"></canvas>
                             </div>
+                            
                         </div>
                         <h3>Top Productos Afectados (Por Cantidad)</h3>
                         <div class="table-responsive">
@@ -1057,16 +1059,39 @@
             const sem = document.getElementById("est-semana").value;
             const fEdo = document.getElementById("filtro-inc-estado").value;
             const fSuc = document.getElementById("filtro-inc-sucursal").value;
-            const fOrigen = document.getElementById("filtro-inc-origen").value; // NUEVO
-            
+    
+            // =====================================================================
+            // INICIO PASO 2: Controlar visibilidad del Responsable y la Gráfica
+            // =====================================================================
+            const divResponsable = document.getElementById("contenedor-filtro-responsable");
+            const divGrafica = document.getElementById("contenedor-grafica-motivos");
+            const filtroOrigen = document.getElementById("filtro-inc-origen");
+    
+            const mostrarElementos = (fEdo === "SE REGRESÓ" || fEdo === "SE QUEDÓ EN SUCURSAL");
+
+            if (mostrarElementos) {
+                divResponsable.style.display = "block";
+                divGrafica.style.display = "block";
+            } else {
+                divResponsable.style.display = "none";
+                divGrafica.style.display = "none";
+                filtroOrigen.value = "TODOS"; // Reseteamos el filtro si se oculta
+            }
+            // =====================================================================
+            // FIN PASO 2
+            // =====================================================================
+
+            // Tomamos el valor de origen DESPUÉS de la lógica anterior por si se reseteó a "TODOS"
+            const fOrigenActualizado = filtroOrigen.value; 
+        
             let arr = incidenciasLocales.filter(i => pasaFiltroTiempo(i.fecha, tipoT, mes, sem));
             if(fEdo !== "TODOS") arr = arr.filter(i => i.estado === fEdo);
             if(fSuc !== "TODAS") arr = arr.filter(i => i.sucursal === fSuc);
-            if(fOrigen !== "TODOS") arr = arr.filter(i => i.origen === fOrigen); // APLICAR NUEVO FILTRO
-
+            if(fOrigenActualizado !== "TODOS") arr = arr.filter(i => i.origen === fOrigenActualizado); 
+        
             let tPT = 0, tPAX = 0, cProd = {};
-            let countMotivos = {}; // NUEVO: Para guardar el conteo de la gráfica
-
+            let countMotivos = {};
+        
             arr.forEach(i => {
                 let v = i.cantidad * i.precio;
                 i.tipo === "PT PAX" ? tPAX += v : tPT += v;
@@ -1074,28 +1099,33 @@
                 if(!cProd[i.producto]) cProd[i.producto] = { cant: 0, valor: 0 };
                 cProd[i.producto].cant += i.cantidad; cProd[i.producto].valor += v;
 
-                // NUEVO: Lógica para la gráfica (solo si se regresó y tiene motivo)
-                if (i.estado === "SE REGRESÓ" && i.motivo) {
+                // =====================================================================
+                // INICIO PASO 3: Modificar lógica de la gráfica para ambos estados
+                // =====================================================================
+                if ((i.estado === "SE REGRESÓ" || i.estado === "SE QUEDÓ EN SUCURSAL") && i.motivo) {
                     if (!countMotivos[i.motivo]) countMotivos[i.motivo] = 0;
-                    countMotivos[i.motivo] += 1; // Suma 1 por cada registro (no por cantidad de producto)
+                    countMotivos[i.motivo] += 1; 
                 }
+                // =====================================================================
+                // FIN PASO 3
+                // =====================================================================
             });
-
+        
             // Actualizar tarjetas de dinero
             document.getElementById("total-dinero-pt").innerText = "$" + tPT.toLocaleString('es-MX', {minimumFractionDigits: 2});
             document.getElementById("total-dinero-pax").innerText = "$" + tPAX.toLocaleString('es-MX', {minimumFractionDigits: 2});
-
+        
             // Actualizar tabla Top Productos
             let top = Object.keys(cProd).map(k => ({ nombre: k, cant: cProd[k].cant, valor: cProd[k].valor })).sort((a,b) => b.cant - a.cant);
             const tbody = document.querySelector("#tabla-top-productos tbody"); tbody.innerHTML = "";
             top.slice(0,10).forEach(p => tbody.innerHTML += `<tr><td>${p.nombre}</td><td><b>${p.cant}</b></td><td class="money">$${p.valor.toLocaleString('es-MX')}</td></tr>`);
-
-            // NUEVO: Dibujar Gráfica de Motivos
+        
+            // Dibujar Gráfica de Motivos
             let labelsMotivos = Object.keys(countMotivos);
             let dataMotivos = Object.values(countMotivos);
             
             const ctxMotivos = document.getElementById('graficaMotivos').getContext('2d');
-            if(chartMotivos) chartMotivos.destroy(); // Destruye la anterior para no encimarlas
+            if(chartMotivos) chartMotivos.destroy(); 
             
             chartMotivos = new Chart(ctxMotivos, {
                 type: 'bar',
@@ -1112,7 +1142,7 @@
                     responsive: true, 
                     scales: { 
                         y: { beginAtZero: true, ticks: { stepSize: 1 } },
-                        x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 } } // Rota los textos para que se lean mejor
+                        x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 } } 
                     } 
                 }
             });
