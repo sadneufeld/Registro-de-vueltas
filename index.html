@@ -195,16 +195,6 @@
                 </div>
                 <div class="form-row">
                     <div class="form-col">
-                        <label>Producto:</label>
-                        <select id="inc-producto" required><option value="">-- Primero elige el tipo --</option></select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-col">
-                        <label>Cantidad:</label>
-                        <input type="number" id="inc-cantidad" min="1" required>
-                    </div>
-                    <div class="form-col">
                         <label>Estado / Movimiento:</label>
                         <select id="inc-estado" onchange="verificarEstadoMotivo()" required>
                             <option value="FALTÓ">Faltó en ruta</option>
@@ -214,6 +204,24 @@
                         </select>
                     </div>
                 </div>
+
+                <h3 style="font-size: 16px; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid var(--primary-light); padding-bottom: 5px;">Productos con esta incidencia</h3>
+                <div id="productos-container">
+                    <div class="producto-row form-row" style="margin-bottom: 10px; align-items: flex-end;">
+                        <div class="form-col" style="flex: 3; min-width: 200px;">
+                            <label>Producto:</label>
+                            <select class="inc-producto" required><option value="">-- Primero elige el tipo --</option></select>
+                        </div>
+                        <div class="form-col" style="flex: 1; min-width: 90px; max-width: 150px;">
+                            <label>Cantidad:</label>
+                            <input type="number" class="inc-cantidad" min="1" required>
+                        </div>
+                        <div class="form-col" style="max-width: 50px; min-width: 50px;">
+                            <button type="button" class="btn-remove-prod" onclick="eliminarFilaProducto(this)" style="background:#E74C3C; color:white; border:none; padding: 10px; border-radius:6px; cursor:pointer; display:none; width: 100%; font-weight: bold;">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="agregarFilaProducto()" style="background: var(--secondary); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 25px; display: inline-block;">+ Agregar otro producto</button>
 
                <div class="form-row" id="div-motivo" style="display: none;">
                     <div class="form-col">
@@ -835,9 +843,45 @@
         // REGISTRO DE DIFERENCIAS (LOGICA MOTIVO)
         function cargarProductosDropdown() {
             const tipo = document.getElementById("inc-tipo").value;
-            const sel = document.getElementById("inc-producto");
-            sel.innerHTML = "<option value=''>-- Elige Producto --</option>";
-            productosDB.filter(p => p.tipo === tipo).forEach(p => sel.innerHTML += `<option value="${p.nombre}">${p.nombre} ($${p.precio})</option>`);
+            const selects = document.querySelectorAll(".inc-producto");
+            
+            selects.forEach(sel => {
+                const valorPrevio = sel.value; // Guardamos el valor por si ya había uno seleccionado
+                sel.innerHTML = "<option value=''>-- Elige Producto --</option>";
+                productosDB.filter(p => p.tipo === tipo).forEach(p => {
+                    sel.innerHTML += `<option value="${p.nombre}">${p.nombre} ($${p.precio})</option>`;
+                });
+                if(valorPrevio) sel.value = valorPrevio; // Lo restauramos
+            });
+        }
+
+        function agregarFilaProducto() {
+            const container = document.getElementById("productos-container");
+            const primeraFila = container.querySelector(".producto-row");
+            const nuevaFila = primeraFila.cloneNode(true); // Clona el HTML
+            
+            // Limpia los valores de la nueva fila clonada
+            nuevaFila.querySelector(".inc-producto").value = "";
+            nuevaFila.querySelector(".inc-cantidad").value = "";
+            
+            container.appendChild(nuevaFila);
+            actualizarBotonesEliminar();
+        }
+
+        function eliminarFilaProducto(btn) {
+            const fila = btn.closest(".producto-row");
+            fila.remove();
+            actualizarBotonesEliminar();
+        }
+
+        function actualizarBotonesEliminar() {
+            const filas = document.querySelectorAll("#productos-container .producto-row");
+            // Si solo queda una fila, ocultamos el botón de borrar
+            if (filas.length === 1) {
+                filas[0].querySelector(".btn-remove-prod").style.display = "none";
+            } else {
+                filas.forEach(f => f.querySelector(".btn-remove-prod").style.display = "block");
+            }
         }
 
         function verificarEstadoMotivo() {
@@ -911,41 +955,100 @@
 
         document.getElementById("incidencias-form").addEventListener("submit", function(e) {
             e.preventDefault();
-            const prodObj = productosDB.find(p => p.nombre === document.getElementById("inc-producto").value);
             
-            const nuevaInc = {
-                tipoRegistro: "INCIDENCIA", 
-                fecha: document.getElementById("inc-fecha").value, 
-                sucursal: document.getElementById("inc-sucursal").value, 
-                tipo: document.getElementById("inc-tipo").value,
-                producto: prodObj.nombre, 
-                precio: prodObj.precio, 
-                cantidad: parseInt(document.getElementById("inc-cantidad").value),
-                estado: document.getElementById("inc-estado").value,
-                motivo: document.getElementById("inc-motivo").value, 
-                juliano: document.getElementById("inc-juliano").value,
-                origen: document.getElementById("inc-estado").value === "SE REGRESÓ" ? document.getElementById("origenIncidencia").value : "",
-                accion: document.getElementById("inc-estado").value === "SE QUEDÓ EN SUCURSAL" ? document.getElementById("inc-accion").value : ""
-            };
-            
-            loader.style.display = 'flex';
-            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(nuevaInc) })
-            .then(res => res.json())
-            .then(res => {
-                if(res.status === "exito"){
-                    // OJO: Ya borramos la línea que decía nuevaInc.fecha = getHoyStr(); porque ya viene en nuevaInc
-                    incidenciasLocales.push(nuevaInc);
-                    
-                    let fechaGuardada = document.getElementById("inc-fecha").value; // Guardamos la fecha antes de resetear
-                    this.reset(); 
-                    document.getElementById("inc-fecha").value = fechaGuardada; // Se queda la misma fecha seleccionada
-                    
-                    document.getElementById("inc-tipo").value="PT"; 
-                    cargarProductosDropdown(); verificarEstadoMotivo(); renderStatsIncidencias(); renderHistorialIncidencias();
-                } else alert("Error: " + res.mensaje);
-            }).finally(() => loader.style.display = 'none');
-        });
+            const fecha = document.getElementById("inc-fecha").value;
+            const sucursal = document.getElementById("inc-sucursal").value;
+            const tipo = document.getElementById("inc-tipo").value;
+            const estado = document.getElementById("inc-estado").value;
+            const motivo = document.getElementById("inc-motivo").value;
+            const juliano = document.getElementById("inc-juliano").value;
+            const origen = estado === "SE REGRESÓ" ? document.getElementById("origenIncidencia").value : "";
+            const accion = estado === "SE QUEDÓ EN SUCURSAL" ? document.getElementById("inc-accion").value : "";
 
+            const filasProductos = document.querySelectorAll("#productos-container .producto-row");
+            const promesasEnvio = [];
+            const nuevasIncidenciasLocales = [];
+
+            // Recorremos todas las filas agregadas
+            filasProductos.forEach(fila => {
+                const prodNombre = fila.querySelector(".inc-producto").value;
+                const cantidad = parseInt(fila.querySelector(".inc-cantidad").value);
+                const prodObj = productosDB.find(p => p.nombre === prodNombre);
+                
+                if(prodObj) {
+                    const nuevaInc = {
+                        tipoRegistro: "INCIDENCIA", 
+                        fecha: fecha, 
+                        sucursal: sucursal, 
+                        tipo: tipo,
+                        producto: prodObj.nombre, 
+                        precio: prodObj.precio, 
+                        cantidad: cantidad,
+                        estado: estado,
+                        motivo: motivo, 
+                        juliano: juliano,
+                        origen: origen,
+                        accion: accion
+                    };
+                    
+                    nuevasIncidenciasLocales.push(nuevaInc);
+                    
+                    // Preparamos las peticiones a Google Apps Script
+                    const promesa = fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(nuevaInc) })
+                                    .then(res => res.json());
+                    promesasEnvio.push(promesa);
+                }
+            });
+
+            if(promesasEnvio.length === 0) return;
+
+            loader.style.display = 'flex';
+            
+            // Enviamos todas las filas al mismo tiempo
+            Promise.all(promesasEnvio)
+            .then(resultados => {
+                const todosExito = resultados.every(res => res.status === "exito");
+                
+                if(todosExito) {
+                    nuevasIncidenciasLocales.forEach(inc => incidenciasLocales.push(inc));
+                    
+                    let fechaGuardada = document.getElementById("inc-fecha").value; 
+                    this.reset(); 
+                    
+                    // Limpiamos el contenedor de productos y dejamos solo una fila original
+                    const container = document.getElementById("productos-container");
+                    container.innerHTML = `
+                        <div class="producto-row form-row" style="margin-bottom: 10px; align-items: flex-end;">
+                            <div class="form-col" style="flex: 3; min-width: 200px;">
+                                <label>Producto:</label>
+                                <select class="inc-producto" required><option value="">-- Primero elige el tipo --</option></select>
+                            </div>
+                            <div class="form-col" style="flex: 1; min-width: 90px; max-width: 150px;">
+                                <label>Cantidad:</label>
+                                <input type="number" class="inc-cantidad" min="1" required>
+                            </div>
+                            <div class="form-col" style="max-width: 50px; min-width: 50px;">
+                                <button type="button" class="btn-remove-prod" onclick="eliminarFilaProducto(this)" style="background:#E74C3C; color:white; border:none; padding: 10px; border-radius:6px; cursor:pointer; display:none; width: 100%; font-weight: bold;">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById("inc-fecha").value = fechaGuardada;
+                    document.getElementById("inc-tipo").value = "PT"; 
+                    
+                    cargarProductosDropdown(); 
+                    verificarEstadoMotivo(); 
+                    renderStatsIncidencias(); 
+                    renderHistorialIncidencias();
+                } else {
+                    const errorMsg = resultados.find(res => res.status !== "exito");
+                    alert("Error en el guardado: " + (errorMsg ? errorMsg.mensaje : "Verifica tu base de datos."));
+                }
+            })
+            .catch(err => { console.error(err); alert("Error de conexión."); })
+            .finally(() => loader.style.display = 'none');
+        });
+        
         // HELPERS FILTROS
         function pasaFiltroTiempo(fechaRegistro, tipoFiltro, valMes, valSemana) {
             if(!fechaRegistro) return false;
