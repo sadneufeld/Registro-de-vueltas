@@ -1054,55 +1054,6 @@
                 alert("Atención: Hubo un problema con algunos productos. " + mensajeError);
             }
         });
-
-            if(promesasEnvio.length === 0) return;
-
-            loader.style.display = 'flex';
-            
-            // Enviamos todas las filas al mismo tiempo
-            Promise.all(promesasEnvio)
-            .then(resultados => {
-                const todosExito = resultados.every(res => res.status === "exito");
-                
-                if(todosExito) {
-                    nuevasIncidenciasLocales.forEach(inc => incidenciasLocales.push(inc));
-                    
-                    let fechaGuardada = document.getElementById("inc-fecha").value; 
-                    this.reset(); 
-                    
-                    // Limpiamos el contenedor de productos y dejamos solo una fila original
-                    const container = document.getElementById("productos-container");
-                    container.innerHTML = `
-                        <div class="producto-row form-row" style="margin-bottom: 10px; align-items: flex-end;">
-                            <div class="form-col" style="flex: 3; min-width: 200px;">
-                                <label>Producto:</label>
-                                <select class="inc-producto" required><option value="">-- Primero elige el tipo --</option></select>
-                            </div>
-                            <div class="form-col" style="flex: 1; min-width: 90px; max-width: 150px;">
-                                <label>Cantidad:</label>
-                                <input type="number" class="inc-cantidad" min="1" required>
-                            </div>
-                            <div class="form-col" style="max-width: 50px; min-width: 50px;">
-                                <button type="button" class="btn-remove-prod" onclick="eliminarFilaProducto(this)" style="background:#E74C3C; color:white; border:none; padding: 10px; border-radius:6px; cursor:pointer; display:none; width: 100%; font-weight: bold;">🗑️</button>
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.getElementById("inc-fecha").value = fechaGuardada;
-                    document.getElementById("inc-tipo").value = "PT"; 
-                    
-                    cargarProductosDropdown(); 
-                    verificarEstadoMotivo(); 
-                    renderStatsIncidencias(); 
-                    renderHistorialIncidencias();
-                } else {
-                    const errorMsg = resultados.find(res => res.status !== "exito");
-                    alert("Error en el guardado: " + (errorMsg ? errorMsg.mensaje : "Verifica tu base de datos."));
-                }
-            })
-            .catch(err => { console.error(err); alert("Error de conexión."); })
-            .finally(() => loader.style.display = 'none');
-        });
         
         // HELPERS FILTROS
         function pasaFiltroTiempo(fechaRegistro, tipoFiltro, valMes, valSemana) {
