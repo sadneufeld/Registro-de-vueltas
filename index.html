@@ -1376,11 +1376,14 @@
             }
         }
 
-        // Inicializar el color al cargar la página
-        window.onload = function() {
+        window.addEventListener('load', function() {
             actualizarEstiloTipo();
-            // Si tienes otras funciones de inicio, ponlas aquí también
-        };
+
+            // Si tenías otras funciones que cargaban al inicio, asegúrate de llamarlas aquí también
+            // Por ejemplo:
+            // cargarDatosIniciales();
+            // renderStatsIncidencias();
+        });
         
     </script>
 </body>
