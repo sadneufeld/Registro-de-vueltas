@@ -100,18 +100,12 @@
         .filter-panel { background: #eef2f5; padding: 15px; border-radius: 8px; border: 2px solid var(--primary-light); margin-bottom: 25px; }
 
         @media (max-width: 800px) { .logo-img { position: relative; top: 0; left: 0; display: block; margin: 0 auto; } }
-    #inc-tipo {
-        transition: background-color 0.3s ease, color 0.3s ease;
-        cursor: pointer;
-        font-weight: bold;
-        border: 1px solid #ccc; /* Para que se vea el borde */
-    }
     </style>
 </head>
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.2.8</div>
+    <div class="version-tag">v1.2.7</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -193,7 +187,7 @@
                     </div>
                     <div class="form-col">
                         <label>Tipo de Almacén:</label>
-                        <select id="inc-tipo" onchange="actualizarEstiloTipo(); cargarProductosDropdown();" required>
+                        <select id="inc-tipo" onchange="cargarProductosDropdown()" required>
                             <option value="PT">PT</option>
                             <option value="PT PAX">PT PAX</option>
                         </select>
@@ -1354,37 +1348,6 @@
                 </tr>`;
             });
         }
-
-        function actualizarEstiloTipo() {
-            const select = document.getElementById("inc-tipo");
-            const valor = select.value;
-    
-            // Usamos getComputedStyle para obtener los colores de tus variables :root
-            const colorPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary');
-            const colorPtPax = getComputedStyle(document.documentElement).getPropertyValue('--pt-pax');
-
-            if (valor === "PT") {
-                select.style.backgroundColor = colorPrimary;
-                select.style.color = "white";
-            } else if (valor === "PT PAX") {
-                select.style.backgroundColor = colorPtPax;
-                select.style.color = "white";
-            } else {
-                // Estado por defecto (cuando no hay selección)
-                select.style.backgroundColor = "white";
-                select.style.color = "black";
-            }
-        }
-
-        window.addEventListener('load', function() {
-            actualizarEstiloTipo();
-
-            // Si tenías otras funciones que cargaban al inicio, asegúrate de llamarlas aquí también
-            // Por ejemplo:
-            // cargarDatosIniciales();
-            // renderStatsIncidencias();
-        });
-        
     </script>
 </body>
 </html>
