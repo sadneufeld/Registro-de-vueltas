@@ -105,7 +105,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.2.6</div>
+    <div class="version-tag">v1.2.7</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -953,9 +953,9 @@
             }
         }
 
-        document.getElementById("incidencias-form").addEventListener("submit", function(e) {
+        document.getElementById("incidencias-form").addEventListener("submit", async function(e) {
             e.preventDefault();
-            
+    
             const fecha = document.getElementById("inc-fecha").value;
             const sucursal = document.getElementById("inc-sucursal").value;
             const tipo = document.getElementById("inc-tipo").value;
@@ -966,16 +966,19 @@
             const accion = estado === "SE QUEDÓ EN SUCURSAL" ? document.getElementById("inc-accion").value : "";
 
             const filasProductos = document.querySelectorAll("#productos-container .producto-row");
-            const promesasEnvio = [];
             const nuevasIncidenciasLocales = [];
+            let huboError = false;
+            let mensajeError = "";
 
-            // Recorremos todas las filas agregadas
-            filasProductos.forEach(fila => {
+            loader.style.display = 'flex';
+
+            // Usamos for...of para poder usar await y enviar UNO POR UNO
+            for (const fila of filasProductos) {
                 const prodNombre = fila.querySelector(".inc-producto").value;
                 const cantidad = parseInt(fila.querySelector(".inc-cantidad").value);
                 const prodObj = productosDB.find(p => p.nombre === prodNombre);
-                
-                if(prodObj) {
+        
+                if (prodObj) {
                     const nuevaInc = {
                         tipoRegistro: "INCIDENCIA", 
                         fecha: fecha, 
@@ -990,15 +993,67 @@
                         origen: origen,
                         accion: accion
                     };
-                    
-                    nuevasIncidenciasLocales.push(nuevaInc);
-                    
-                    // Preparamos las peticiones a Google Apps Script
-                    const promesa = fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(nuevaInc) })
-                                    .then(res => res.json());
-                    promesasEnvio.push(promesa);
+            
+                    try {
+                        // AWAIT pausa el ciclo hasta que Google responda, evitando que se pisen los datos
+                        const res = await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(nuevaInc) }).then(r => r.json());
+                        
+                        if (res.status === "exito") {
+                            nuevasIncidenciasLocales.push(nuevaInc);
+                        } else {
+                            huboError = true;
+                            mensajeError = res.mensaje || "Error en el servidor de Google.";
+                        }
+                    } catch (error) {
+                        huboError = true;
+                        mensajeError = "Error de conexión.";
+                    }
+                } else {
+                    huboError = true;
+                    mensajeError = "Un producto seleccionado no es válido o está vacío.";
                 }
-            });
+            }
+
+            loader.style.display = 'none';
+        
+            // Solo actualizar UI si se guardaron los datos (o parte de ellos)
+            if (nuevasIncidenciasLocales.length > 0) {
+                nuevasIncidenciasLocales.forEach(inc => incidenciasLocales.push(inc));
+                
+                let fechaGuardada = document.getElementById("inc-fecha").value; 
+                this.reset(); 
+                
+                // Limpiamos el contenedor de productos y dejamos solo una fila original
+                const container = document.getElementById("productos-container");
+                container.innerHTML = `
+                    <div class="producto-row form-row" style="margin-bottom: 10px; align-items: flex-end;">
+                        <div class="form-col" style="flex: 3; min-width: 200px;">
+                            <label>Producto:</label>
+                            <select class="inc-producto" required><option value="">-- Primero elige el tipo --</option></select>
+                        </div>
+                        <div class="form-col" style="flex: 1; min-width: 90px; max-width: 150px;">
+                            <label>Cantidad:</label>
+                            <input type="number" class="inc-cantidad" min="1" required>
+                        </div>
+                        <div class="form-col" style="max-width: 50px; min-width: 50px;">
+                            <button type="button" class="btn-remove-prod" onclick="eliminarFilaProducto(this)" style="background:#E74C3C; color:white; border:none; padding: 10px; border-radius:6px; cursor:pointer; display:none; width: 100%; font-weight: bold;">🗑️</button>
+                        </div>
+                    </div>
+                `;
+        
+                document.getElementById("inc-fecha").value = fechaGuardada;
+                document.getElementById("inc-tipo").value = "PT"; 
+        
+                cargarProductosDropdown(); 
+                verificarEstadoMotivo(); 
+                renderStatsIncidencias(); 
+                renderHistorialIncidencias();
+            }
+
+            if (huboError) {
+                alert("Atención: Hubo un problema con algunos productos. " + mensajeError);
+            }
+        });
 
             if(promesasEnvio.length === 0) return;
 
