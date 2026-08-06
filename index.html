@@ -72,6 +72,8 @@
         
         button.btn-submit { background: var(--primary); color: var(--white); border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; }
         button.btn-submit:hover { background: var(--primary-dark); }
+        button.btn-submit.btn-pax-theme { background: var(--pt-pax); }
+        button.btn-submit.btn-pax-theme:hover { background: #D11A30; /* Un rojo más oscuro para el hover */ }
         .btn-sync { background: var(--secondary); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-sort { background: var(--text-dark); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
 
@@ -105,7 +107,7 @@
 <body>
 
     <img src="Logo Pasteleria Neufeld.png" alt="Logo Neufeld" class="logo-img">
-    <div class="version-tag">v1.2.7</div>
+    <div class="version-tag">v1.2.8</div>
 
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
@@ -821,6 +823,18 @@
             });
         }
 
+        // Cambiar color del botón de guardar vuelta dependiendo del almacén seleccionado
+        document.querySelectorAll('input[name="tipoProducto"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const btnSubmit = document.querySelector('#registro-form .btn-submit');
+                if (this.value === 'PT PAX') {
+                    btnSubmit.classList.add('btn-pax-theme');
+                } else {
+                    btnSubmit.classList.remove('btn-pax-theme');
+                }
+            });
+        });
+
         // REGISTRO VUELTAS NORMAL
         document.getElementById("registro-form").addEventListener("submit", function(e) {
             e.preventDefault();
@@ -837,6 +851,7 @@
             .then(() => {
                 registros.push(nuevoRegistro); actualizarCuadricula(); actualizarEstadisticasGlobales();
                 let f = document.getElementById("fechaRegistro").value; this.reset(); document.getElementById("fechaRegistro").value = f;
+                document.querySelector('#registro-form .btn-submit').classList.remove('btn-pax-theme');
             }).finally(() => loader.style.display = 'none');
         });
 
